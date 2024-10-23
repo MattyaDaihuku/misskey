@@ -260,6 +260,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: 'auto' as 'auto' | 'popup' | 'drawer',
 	},
+	userSelector: {
+		where: 'device',
+		default: 'all' as 'all' | 'user',
+	},
 	useBlurEffectForModal: {
 		where: 'device',
 		default: !/mobile|iphone|android/.test(navigator.userAgent.toLowerCase()), // 循環参照するのでdevice-kind.tsは参照できない

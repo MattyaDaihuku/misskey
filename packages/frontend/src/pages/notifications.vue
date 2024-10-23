@@ -15,6 +15,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkNotes :pagination="mentionsPagination"/>
 			</div>
 			<div v-else-if="tab === 'directNotes'" key="directNotes">
+				<MkUserSelectItem/>
 				<MkNotes :pagination="directNotesPagination"/>
 			</div>
 		</MkHorizontalSwipe>
@@ -31,6 +32,7 @@ import * as os from '@/os.js';
 import { i18n } from '@/i18n.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
 import { notificationTypes } from '@@/js/const.js';
+import MkUserSelectItem from '@/components/MkUserSelectItem.vue';
 
 const tab = ref('all');
 const includeTypes = ref<string[] | null>(null);
