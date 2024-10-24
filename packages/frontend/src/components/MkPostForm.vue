@@ -34,7 +34,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</template>
 			<button v-click-anime v-tooltip="i18n.ts._visibility.disableFederation" class="_button" :class="[$style.headerRightItem, { [$style.danger]: localOnly }]" :disabled="channel != null || visibility === 'specified'" @click="toggleLocalOnly">
 				<span v-if="localOnly || remoteReply"><i class="ti ti-rocket-off"></i></span>
-				<span v-else><i class="ti ti-rocket"></i></span>
+				<span v-else-if="!localOnly"><i class="ti ti-rocket"></i></span>
 			</button>
 			<button v-click-anime v-tooltip="i18n.ts.reactionAcceptance" class="_button" :class="[$style.headerRightItem, { [$style.danger]: reactionAcceptance === 'likeOnly' }]" @click="toggleReactionAcceptance">
 				<span v-if="reactionAcceptance === 'likeOnly'"><i class="ti ti-heart"></i></span>
