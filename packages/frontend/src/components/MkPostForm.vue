@@ -215,7 +215,7 @@ const hasRemoteMentions = computed(() => {
 	return visibleUsers.value.some(user => !isLocalUser(user));
 });
 
-const remoteReply = computed(() => !isReplyUserLocal.value || !hasRemoteMentions.value);
+const remoteReply = computed(() => !isReplyUserLocal.value && !hasRemoteMentions.value);
 
 const draftKey = computed((): string => {
 	let key = props.channel ? `channel:${props.channel.id}` : '';
