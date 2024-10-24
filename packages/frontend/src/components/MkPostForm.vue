@@ -33,8 +33,8 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 			</template>
 			<button v-click-anime v-tooltip="i18n.ts._visibility.disableFederation" class="_button" :class="[$style.headerRightItem, { [$style.danger]: localOnly }]" :disabled="channel != null || visibility === 'specified'" @click="toggleLocalOnly">
-				<span v-if="localOnly || remoteReply"><i class="ti ti-rocket-off"></i></span>
-				<span v-else-if="!localOnly"><i class="ti ti-rocket"></i></span>
+				<span v-if="!localOnly"><i class="ti ti-rocket"></i></span>
+				<span v-else><i class="ti ti-rocket-off"></i></span>
 			</button>
 			<button v-click-anime v-tooltip="i18n.ts.reactionAcceptance" class="_button" :class="[$style.headerRightItem, { [$style.danger]: reactionAcceptance === 'likeOnly' }]" @click="toggleReactionAcceptance">
 				<span v-if="reactionAcceptance === 'likeOnly'"><i class="ti ti-heart"></i></span>
@@ -187,7 +187,6 @@ const showAddMfmFunction = ref(defaultStore.state.enableQuickAddMfmFunction);
 watch(showAddMfmFunction, () => defaultStore.set('enableQuickAddMfmFunction', showAddMfmFunction.value));
 const cw = ref<string | null>(props.initialCw ?? null);
 const localOnly = ref(props.initialLocalOnly ?? (defaultStore.state.rememberNoteVisibility ? defaultStore.state.localOnly : defaultStore.state.defaultNoteLocalOnly));
-const remoteReply = ref(false);
 const visibility = ref(props.initialVisibility ?? (defaultStore.state.rememberNoteVisibility ? defaultStore.state.visibility : defaultStore.state.defaultNoteVisibility));
 const visibleUsers = ref<Misskey.entities.UserDetailed[]>([]);
 if (props.initialVisibleUsers) {
@@ -527,12 +526,6 @@ async function toggleLocalOnly() {
 	if (defaultStore.state.rememberNoteVisibility) {
 		defaultStore.set('localOnly', localOnly.value);
 	}
-
-	if (remoteReply.value) {
-    localOnly.value = false;
-  } else {
-    localOnly.value = !localOnly.value;
-  }
 }
 
 async function toggleReactionAcceptance() {
@@ -990,6 +983,10 @@ function openAccountMenu(ev: MouseEvent) {
 	}, ev);
 }
 
+function isLocalUser(user) {
+	return user && (!user.host || user.host === host);
+}
+
 onMounted(() => {
 	if (props.autofocus) {
 		focus();
@@ -997,6 +994,17 @@ onMounted(() => {
 		nextTick(() => {
 			focus();
 		});
+	}
+
+	if (props.reply) {
+		const replyUser = props.reply.user;
+		const localUser = isLocalUser(replyUser);
+
+		if (localUser) {
+			localOnly.value = props.initialLocalOnly ?? (defaultStore.state.rememberNoteVisibility ? defaultStore.state.localOnly : defaultStore.state.defaultNoteLocalOnly);
+		} else {
+			localOnly.value = false; // リモートユーザーの場合に「連合なし」を無効にする
+		}
 	}
 
 	// TODO: detach when unmount
