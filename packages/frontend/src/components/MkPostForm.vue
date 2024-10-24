@@ -32,7 +32,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<span :class="$style.headerRightButtonText">{{ channel.name }}</span>
 				</button>
 			</template>
-			<button v-click-anime v-tooltip="i18n.ts._visibility.disableFederation" class="_button" :class="[$style.headerRightItem, { [$style.danger]: localOnly }]" :disabled="channel != null || visibility === 'specified' || remoteReply || remoteReplyText" @click="toggleLocalOnly">
+			<button v-click-anime v-tooltip="i18n.ts._visibility.disableFederation" class="_button" :class="[$style.headerRightItem, { [$style.danger]: localOnly }]" :disabled="channel != null || visibility === 'specified' || remoteReply" @click="toggleLocalOnly">
 				<span v-if="!localOnly"><i class="ti ti-rocket"></i></span>
 				<span v-else><i class="ti ti-rocket-off"></i></span>
 			</button>
@@ -215,27 +215,7 @@ const hasRemoteMentions = computed(() => {
 	return visibleUsers.value.some(user => !isLocalUser(user));
 });
 
-const mentionPattern = /@[\w]+[\w.]+/g || /@[\w]+@[\w.]+/g;
-const hasRemoteMentionText = ref(false);
-
-const remoteReplyText = computed({
-	get() {
-		return hasRemoteMentionText.value;
-	},
-	set(newValue) {
-		hasRemoteMentionText.value = newValue;
-	},
-});
-
-const remoteReply = computed(() => !isReplyUserLocal.value && !hasRemoteMentions.value);
-
-watch(textareaEl, (newVal) => {
-	if (newVal) {
-		newVal.addEventListener('input', () => {
-			remoteReplyText.value = mentionPattern.test(newVal.value);
-		});
-	}
-}, { immediate: true });
+const remoteReply = computed(() => !isReplyUserLocal.value && hasRemoteMentions.value);
 
 const draftKey = computed((): string => {
 	let key = props.channel ? `channel:${props.channel.id}` : '';
