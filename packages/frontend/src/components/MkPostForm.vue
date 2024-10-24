@@ -215,14 +215,27 @@ const hasRemoteMentions = computed(() => {
 	return visibleUsers.value.some(user => !isLocalUser(user));
 });
 
-const mentionPattern = /@[\w]+@[\w.]+/g;
+const mentionPattern = /@[\w]+[\w.]+/g || /@[\w]+@[\w.]+/g;
+const hasRemoteMentionText = ref(false);
 
-const hasRemoteMentionText = computed(() => {
-	return mentionPattern.test(text.value);
+const remoteReplyText = computed({
+	get() {
+		return hasRemoteMentionText.value;
+	},
+	set(newValue) {
+		hasRemoteMentionText.value = newValue;
+	},
 });
 
 const remoteReply = computed(() => !isReplyUserLocal.value && !hasRemoteMentions.value);
-const remoteReplyText = computed(() => hasRemoteMentionText.value);
+
+watch(textareaEl, (newVal) => {
+	if (newVal) {
+		newVal.addEventListener('input', () => {
+			remoteReplyText.value = mentionPattern.test(newVal.value);
+		});
+	}
+}, { immediate: true });
 
 const draftKey = computed((): string => {
 	let key = props.channel ? `channel:${props.channel.id}` : '';
@@ -302,13 +315,6 @@ watch(visibleUsers, () => {
 	checkMissingMention();
 }, {
 	deep: true,
-});
-watch(textareaEl, (newVal) => {
-	if (newVal) {
-		newVal.addEventListener('input', () => {
-			remoteReplyText.value = mentionPattern.test(newVal.value);
-		});
-	}
 });
 
 if (props.mention) {
