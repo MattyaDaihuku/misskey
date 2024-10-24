@@ -212,7 +212,7 @@ const isReplyUserLocal = computed(() => {
 });
 
 const hasRemoteMentions = computed(() => {
-  return visibleUsers.value.some(user => !isLocalUser(user));
+	return visibleUsers.value.some(user => !isLocalUser(user));
 });
 
 const remoteReply = computed(() => !isReplyUserLocal.value || !hasRemoteMentions.value);
