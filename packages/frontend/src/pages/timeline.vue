@@ -52,7 +52,7 @@ import { deviceKind } from '@/scripts/device-kind.js';
 import { deepMerge } from '@/scripts/merge.js';
 import type { MenuItem } from '@/types/menu.js';
 import { miLocalStorage } from '@/local-storage.js';
-import { availableBasicTimelines, hasWithReplies, isAvailableBasicTimeline, isBasicTimeline, basicTimelineIconClass } from '@/timelines.js';
+import { availableBasicTimelines, hasWithReplies, isAvailableBasicTimeline, isBasicTimeline, basicTimelineIconClass, isHomeLocalOnly } from '@/timelines.js';
 import type { BasicTimelineType } from '@/timelines.js';
 
 provide('shouldOmitHeaderTitle', true);
@@ -74,9 +74,10 @@ const withRenotes = computed<boolean>({
 });
 
 // computed内での無限ループを防ぐためのフラグ
-const localSocialTLFilterSwitchStore = ref<'withReplies' | 'onlyFiles' | false>(
+const localSocialTLFilterSwitchStore = ref<'withReplies' | 'onlyFiles' | 'localOnly' | false>(
 	defaultStore.reactiveState.tl.value.filter.withReplies ? 'withReplies' :
 	defaultStore.reactiveState.tl.value.filter.onlyFiles ? 'onlyFiles' :
+	defaultStore.reactiveState.tl.value.filter.localOnly ? 'localOnly' :
 	false,
 );
 
@@ -101,12 +102,25 @@ const onlyFiles = computed<boolean>({
 	},
 	set: (x) => saveTlFilter('onlyFiles', x),
 });
+const localOnly = computed<boolean>({
+	get: () => {
+		if (!$i) return false;
+		if (['home'].includes(src.value) && localSocialTLFilterSwitchStore.value === 'onlyFiles') {
+			return false;
+		} else {
+			return defaultStore.reactiveState.tl.value.filter.localOnly;
+		}
+	},
+	set: (x) => saveTlFilter('localOnly', x),
+});
 
-watch([withReplies, onlyFiles], ([withRepliesTo, onlyFilesTo]) => {
+watch([withReplies, onlyFiles, localOnly], ([withRepliesTo, onlyFilesTo, localOnlyTo]) => {
 	if (withRepliesTo) {
 		localSocialTLFilterSwitchStore.value = 'withReplies';
 	} else if (onlyFilesTo) {
 		localSocialTLFilterSwitchStore.value = 'onlyFiles';
+	} else if (localOnlyTo) {
+		localSocialTLFilterSwitchStore.value = 'localOnly';
 	} else {
 		localSocialTLFilterSwitchStore.value = false;
 	}
@@ -285,6 +299,14 @@ const headerActions = computed(() => {
 					ref: onlyFiles,
 					disabled: isBasicTimeline(src.value) && hasWithReplies(src.value) ? withReplies : false,
 				});
+
+				if (isBasicTimeline(src.value) && isHomeLocalOnly(src.value)) {
+					menuItems.push({
+						type: 'switch',
+						text: i18n.ts.localOnly,
+						ref: localOnly,
+					});
+				}
 
 				os.popupMenu(menuItems, ev.currentTarget ?? ev.target);
 			},

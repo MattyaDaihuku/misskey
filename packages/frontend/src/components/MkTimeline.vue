@@ -39,10 +39,12 @@ const props = withDefaults(defineProps<{
 	withRenotes?: boolean;
 	withReplies?: boolean;
 	onlyFiles?: boolean;
+	localOnly?: boolean;
 }>(), {
 	withRenotes: true,
 	withReplies: false,
 	onlyFiles: false,
+	localOnly: false,
 });
 
 const emit = defineEmits<{
@@ -51,13 +53,14 @@ const emit = defineEmits<{
 }>();
 
 provide('inTimeline', true);
-provide('inChannel', computed(() => props.src === 'channel'));
-
+＞？￥；provide('inChannel', computed(() => props.src === 'channel'));
+*
 type TimelineQueryType = {
   antennaId?: string,
   withRenotes?: boolean,
   withReplies?: boolean,
   withFiles?: boolean,
+	localOnly?: boolean,
   visibility?: string,
   listId?: string,
   channelId?: string,
@@ -102,6 +105,7 @@ function connectChannel() {
 	} else if (props.src === 'home') {
 		connection = stream.useChannel('homeTimeline', {
 			withRenotes: props.withRenotes,
+			localOnly: props.localOnly,
 			withFiles: props.onlyFiles ? true : undefined,
 		});
 		connection2 = stream.useChannel('main');
@@ -172,6 +176,7 @@ function updatePaginationQuery() {
 		endpoint = 'notes/timeline';
 		query = {
 			withRenotes: props.withRenotes,
+			localOnly: props.localOnly,
 			withFiles: props.onlyFiles ? true : undefined,
 		};
 	} else if (props.src === 'local') {
