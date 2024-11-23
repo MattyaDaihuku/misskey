@@ -53,8 +53,7 @@ const emit = defineEmits<{
 }>();
 
 provide('inTimeline', true);
-＞？￥；provide('inChannel', computed(() => props.src === 'channel'));
-*
+provide('inChannel', computed(() => props.src === 'channel'));
 type TimelineQueryType = {
   antennaId?: string,
   withRenotes?: boolean,
