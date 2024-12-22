@@ -19,8 +19,6 @@
  * exportCompleted - エクスポートが完了
  * login - ログイン
  * loginFailed - ログインに失敗
- * scheduledNoteFailed - 予約投稿に失敗
- * scheduledNotePosted - 予約投稿をノート
  * app - アプリ通知
  * test - テスト通知（サーバー側）
  */
