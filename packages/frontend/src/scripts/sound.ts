@@ -5,6 +5,7 @@
 
 import type { SoundStore } from '@/store.js';
 import { defaultStore } from '@/store.js';
+import { RateLimiter } from '@/scripts/rate-limiter.js';
 
 let ctx: AudioContext;
 const cache = new Map<string, AudioBuffer>();

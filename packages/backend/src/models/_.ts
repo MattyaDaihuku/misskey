@@ -15,6 +15,7 @@ import { MiAbuseReportNotificationRecipient } from '@/models/AbuseReportNotifica
 import { MiAccessToken } from '@/models/AccessToken.js';
 import { MiAd } from '@/models/Ad.js';
 import { MiAnnouncement } from '@/models/Announcement.js';
+import { MiAnnouncementRole } from '@/models/AnnouncementRole.js';
 import { MiAnnouncementRead } from '@/models/AnnouncementRead.js';
 import { MiAntenna } from '@/models/Antenna.js';
 import { MiApp } from '@/models/App.js';
@@ -31,6 +32,8 @@ import { MiDriveFolder } from '@/models/DriveFolder.js';
 import { MiEmoji } from '@/models/Emoji.js';
 import { MiFollowing } from '@/models/Following.js';
 import { MiFollowRequest } from '@/models/FollowRequest.js';
+import { MiFollowRequestHistory } from '@/models/FollowRequestHistory.js';
+import { MiFollowHistory } from '@/models/FollowHistory.js';
 import { MiGalleryLike } from '@/models/GalleryLike.js';
 import { MiGalleryPost } from '@/models/GalleryPost.js';
 import { MiHashtag } from '@/models/Hashtag.js';
@@ -79,6 +82,7 @@ import { MiFlashLike } from '@/models/FlashLike.js';
 import { MiUserListFavorite } from '@/models/UserListFavorite.js';
 import { MiBubbleGameRecord } from '@/models/BubbleGameRecord.js';
 import { MiReversiGame } from '@/models/ReversiGame.js';
+import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
 
 export interface MiRepository<T extends ObjectLiteral> {
@@ -130,6 +134,7 @@ export {
 	MiAccessToken,
 	MiAd,
 	MiAnnouncement,
+	MiAnnouncementRole,
 	MiAnnouncementRead,
 	MiAntenna,
 	MiApp,
@@ -146,6 +151,8 @@ export {
 	MiEmoji,
 	MiFollowing,
 	MiFollowRequest,
+	MiFollowRequestHistory,
+	MiFollowHistory,
 	MiGalleryLike,
 	MiGalleryPost,
 	MiHashtag,
@@ -157,6 +164,7 @@ export {
 	MiNote,
 	MiNoteFavorite,
 	MiNoteReaction,
+	MiNoteSchedule,
 	MiNoteThreadMuting,
 	MiNoteUnread,
 	MiPage,
@@ -201,6 +209,7 @@ export type AbuseReportNotificationRecipientRepository = Repository<MiAbuseRepor
 export type AccessTokensRepository = Repository<MiAccessToken> & MiRepository<MiAccessToken>;
 export type AdsRepository = Repository<MiAd> & MiRepository<MiAd>;
 export type AnnouncementsRepository = Repository<MiAnnouncement> & MiRepository<MiAnnouncement>;
+export type AnnouncementRolesRepository = Repository<MiAnnouncementRole> & MiRepository<MiAnnouncementRole>;
 export type AnnouncementReadsRepository = Repository<MiAnnouncementRead> & MiRepository<MiAnnouncementRead>;
 export type AntennasRepository = Repository<MiAntenna> & MiRepository<MiAntenna>;
 export type AppsRepository = Repository<MiApp> & MiRepository<MiApp>;
@@ -217,6 +226,8 @@ export type DriveFoldersRepository = Repository<MiDriveFolder> & MiRepository<Mi
 export type EmojisRepository = Repository<MiEmoji> & MiRepository<MiEmoji>;
 export type FollowingsRepository = Repository<MiFollowing> & MiRepository<MiFollowing>;
 export type FollowRequestsRepository = Repository<MiFollowRequest> & MiRepository<MiFollowRequest>;
+export type FollowRequestHistoryRepository = Repository<MiFollowRequestHistory> & MiRepository<MiFollowRequestHistory>;
+export type FollowHistoryRepository = Repository<MiFollowHistory> & MiRepository<MiFollowHistory>;
 export type GalleryLikesRepository = Repository<MiGalleryLike> & MiRepository<MiGalleryLike>;
 export type GalleryPostsRepository = Repository<MiGalleryPost> & MiRepository<MiGalleryPost>;
 export type HashtagsRepository = Repository<MiHashtag> & MiRepository<MiHashtag>;
@@ -265,3 +276,4 @@ export type FlashLikesRepository = Repository<MiFlashLike> & MiRepository<MiFlas
 export type UserMemoRepository = Repository<MiUserMemo> & MiRepository<MiUserMemo>;
 export type BubbleGameRecordsRepository = Repository<MiBubbleGameRecord> & MiRepository<MiBubbleGameRecord>;
 export type ReversiGamesRepository = Repository<MiReversiGame> & MiRepository<MiReversiGame>;
+export type NoteScheduleRepository = Repository<MiNoteSchedule>;

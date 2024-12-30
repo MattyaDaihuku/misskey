@@ -5,7 +5,7 @@
 
 import { Inject, Injectable } from '@nestjs/common';
 import * as Redis from 'ioredis';
-import { In } from 'typeorm';
+import { In, IsNull } from 'typeorm';
 import { ModuleRef } from '@nestjs/core';
 import type {
 	MiMeta,
@@ -35,6 +35,7 @@ export type RolePolicies = {
 	gtlAvailable: boolean;
 	ltlAvailable: boolean;
 	canPublicNote: boolean;
+	scheduleNoteMax: number;
 	mentionLimit: number;
 	canInvite: boolean;
 	inviteLimit: number;
@@ -69,6 +70,7 @@ export const DEFAULT_POLICIES: RolePolicies = {
 	gtlAvailable: true,
 	ltlAvailable: true,
 	canPublicNote: true,
+	scheduleNoteMax: 15,
 	mentionLimit: 20,
 	canInvite: false,
 	inviteLimit: 0,
@@ -104,6 +106,8 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 	private rootUserIdCache: MemorySingleCache<MiUser['id']>;
 	private rolesCache: MemorySingleCache<MiRole[]>;
 	private roleAssignmentByUserIdCache: MemoryKVCache<MiRoleAssignment[]>;
+	private roleAssignmentByRoleIdCache: MemoryKVCache<MiRoleAssignment[]>;
+	private conditionalRoleUserIdsCache: MemoryKVCache<MiUser[]>;
 	private notificationService: NotificationService;
 
 	public static AlreadyAssignedError = class extends Error {};
@@ -140,6 +144,8 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 		this.rootUserIdCache = new MemorySingleCache<MiUser['id']>(1000 * 60 * 60 * 24 * 7); // 1week. rootユーザのIDは不変なので長めに
 		this.rolesCache = new MemorySingleCache<MiRole[]>(1000 * 60 * 60); // 1h
 		this.roleAssignmentByUserIdCache = new MemoryKVCache<MiRoleAssignment[]>(1000 * 60 * 5); // 5m
+		this.roleAssignmentByRoleIdCache = new MemoryKVCache<MiRoleAssignment[]>(1000 * 60 * 60 * 1);
+		this.conditionalRoleUserIdsCache = new MemoryKVCache<MiUser[]>(1000 * 60 * 60 * 1);
 
 		this.redisForSub.on('message', this.onMessage);
 	}
@@ -189,8 +195,17 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 				}
 				case 'userRoleAssigned': {
 					const cached = this.roleAssignmentByUserIdCache.get(body.userId);
+					const roleCached = this.roleAssignmentByRoleIdCache.get(body.roleId);
 					if (cached) {
 						cached.push({ // TODO: このあたりのデシリアライズ処理は各modelファイル内に関数としてexportしたい
+							...body,
+							expiresAt: body.expiresAt ? new Date(body.expiresAt) : null,
+							user: null, // joinなカラムは通常取ってこないので
+							role: null, // joinなカラムは通常取ってこないので
+						});
+					}
+					if (roleCached) {
+						roleCached.push({ // TODO: このあたりのデシリアライズ処理は各modelファイル内に関数としてexportしたい
 							...body,
 							expiresAt: body.expiresAt ? new Date(body.expiresAt) : null,
 							user: null, // joinなカラムは通常取ってこないので
@@ -201,8 +216,12 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 				}
 				case 'userRoleUnassigned': {
 					const cached = this.roleAssignmentByUserIdCache.get(body.userId);
+					const roleCached = this.roleAssignmentByRoleIdCache.get(body.roleId);
 					if (cached) {
 						this.roleAssignmentByUserIdCache.set(body.userId, cached.filter(x => x.id !== body.id));
+					}
+					if (roleCached) {
+						this.roleAssignmentByRoleIdCache.set(body.roleId, roleCached.filter(x => x.id !== body.id));
 					}
 					break;
 				}
@@ -326,6 +345,38 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 		return [...assignedRoles, ...matchedCondRoles];
 	}
 
+	@bindThis
+	public async getRoleAssigns(roleId: MiRole['id']) {
+		const now = Date.now();
+		let assigns = await this.roleAssignmentByRoleIdCache.fetch(roleId, () => this.roleAssignmentsRepository.findBy({ roleId }));
+		// 期限切れのロールを除外
+		assigns = assigns.filter(a => a.expiresAt == null || (a.expiresAt.getTime() > now));
+		return assigns;
+	}
+
+	@bindThis
+	public async getRoleUsers(roleId: MiRole['id']) : Promise<MiUser[]> {
+		const role = (await this.getRoles()).find(r => r.id === roleId);
+		if (role == null) return [];
+		const assigns = await this.getRoleAssigns(roleId);
+		const assignedUsers = (await Promise.all(assigns.map(async assign => {
+			const user = await this.cacheService.findUserById(assign.userId);
+			return user;
+		})));
+
+		const matchedCondUsers = role.target === 'conditional' ? await (async () => {
+			// このロールにマッチする条件を持ったユーザーを取得
+			return await this.conditionalRoleUserIdsCache.fetch(roleId, (async () => {
+				// TODO: 全件取得は重いので、条件に合致するユーザーを取得するようにする
+				// 現状はユーザー情報から判定しているため、ロール側からユーザーを取得するのが難しい
+				// せめてローカルユーザーのみを対象にするようにした
+				const users = (await this.usersRepository.findBy({ host: IsNull() })).filter((u) => this.evalCond(u, [role], role.condFormula));
+				return users;
+			}));
+		})() : [] as MiUser[];
+		return [...assignedUsers, ...matchedCondUsers];
+	}
+
 	/**
 	 * 指定ユーザーのバッジロール一覧取得
 	 */
@@ -374,6 +425,7 @@ export class RoleService implements OnApplicationShutdown, OnModuleInit {
 			gtlAvailable: calc('gtlAvailable', vs => vs.some(v => v === true)),
 			ltlAvailable: calc('ltlAvailable', vs => vs.some(v => v === true)),
 			canPublicNote: calc('canPublicNote', vs => vs.some(v => v === true)),
+			scheduleNoteMax: calc('scheduleNoteMax', vs => Math.max(...vs)),
 			mentionLimit: calc('mentionLimit', vs => Math.max(...vs)),
 			canInvite: calc('canInvite', vs => vs.some(v => v === true)),
 			inviteLimit: calc('inviteLimit', vs => Math.max(...vs)),

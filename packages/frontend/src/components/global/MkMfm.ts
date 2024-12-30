@@ -61,7 +61,7 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 	//provide('linkNavigationBehavior', props.linkNavigationBehavior);
 
 	const isNote = props.isNote ?? true;
-	const shouldNyaize = props.nyaize ? props.nyaize === 'respect' ? props.author?.isCat : false : false;
+	const shouldNyaize = defaultStore.state.disableNoteNyaize ? false : props.nyaize ? props.nyaize === 'respect' ? props.author?.isCat : false : false;
 
 	// eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
 	if (props.text == null || props.text === '') return;
@@ -433,6 +433,8 @@ export default function (props: MfmProps, { emit }: { emit: SetupContext<MfmEven
 							normal: props.plain,
 							host: props.author.host,
 							useOriginalSize: scale >= 2.5,
+							menu: props.enableEmojiMenu,
+							menuReaction: props.enableEmojiMenuReaction,
 						})];
 					}
 				}

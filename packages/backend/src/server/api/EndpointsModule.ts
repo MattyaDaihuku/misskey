@@ -189,6 +189,8 @@ import * as ep___following_requests_cancel from './endpoints/following/requests/
 import * as ep___following_requests_list from './endpoints/following/requests/list.js';
 import * as ep___following_requests_sent from './endpoints/following/requests/sent.js';
 import * as ep___following_requests_reject from './endpoints/following/requests/reject.js';
+import * as ep___following_requests_history from './endpoints/following/requests/history.js';
+import * as ep___following_history from './endpoints/following/history.js';
 import * as ep___gallery_featured from './endpoints/gallery/featured.js';
 import * as ep___gallery_popular from './endpoints/gallery/popular.js';
 import * as ep___gallery_posts from './endpoints/gallery/posts.js';
@@ -298,6 +300,9 @@ import * as ep___notes_reactions_create from './endpoints/notes/reactions/create
 import * as ep___notes_reactions_delete from './endpoints/notes/reactions/delete.js';
 import * as ep___notes_renotes from './endpoints/notes/renotes.js';
 import * as ep___notes_replies from './endpoints/notes/replies.js';
+import * as ep___notes_schedule_create from './endpoints/notes/schedule/create.js';
+import * as ep___notes_schedule_delete from './endpoints/notes/schedule/delete.js';
+import * as ep___notes_schedule_list from './endpoints/notes/schedule/list.js';
 import * as ep___notes_searchByTag from './endpoints/notes/search-by-tag.js';
 import * as ep___notes_search from './endpoints/notes/search.js';
 import * as ep___notes_show from './endpoints/notes/show.js';
@@ -577,6 +582,8 @@ const $following_requests_cancel: Provider = { provide: 'ep:following/requests/c
 const $following_requests_list: Provider = { provide: 'ep:following/requests/list', useClass: ep___following_requests_list.default };
 const $following_requests_sent: Provider = { provide: 'ep:following/requests/sent', useClass: ep___following_requests_sent.default };
 const $following_requests_reject: Provider = { provide: 'ep:following/requests/reject', useClass: ep___following_requests_reject.default };
+const $following_requests_history: Provider = { provide: "ep:following/requests/history", useClass: ep___following_requests_history.default };
+const $following_history: Provider = { provide: "ep:following/history", useClass: ep___following_history.default };
 const $gallery_featured: Provider = { provide: 'ep:gallery/featured', useClass: ep___gallery_featured.default };
 const $gallery_popular: Provider = { provide: 'ep:gallery/popular', useClass: ep___gallery_popular.default };
 const $gallery_posts: Provider = { provide: 'ep:gallery/posts', useClass: ep___gallery_posts.default };
@@ -686,6 +693,9 @@ const $notes_reactions_create: Provider = { provide: 'ep:notes/reactions/create'
 const $notes_reactions_delete: Provider = { provide: 'ep:notes/reactions/delete', useClass: ep___notes_reactions_delete.default };
 const $notes_renotes: Provider = { provide: 'ep:notes/renotes', useClass: ep___notes_renotes.default };
 const $notes_replies: Provider = { provide: 'ep:notes/replies', useClass: ep___notes_replies.default };
+const $notes_schedule_create: Provider = { provide: 'ep:notes/schedule/create', useClass: ep___notes_schedule_create.default };
+const $notes_schedule_delete: Provider = { provide: 'ep:notes/schedule/delete', useClass: ep___notes_schedule_delete.default };
+const $notes_schedule_list: Provider = { provide: 'ep:notes/schedule/list', useClass: ep___notes_schedule_list.default };
 const $notes_searchByTag: Provider = { provide: 'ep:notes/search-by-tag', useClass: ep___notes_searchByTag.default };
 const $notes_search: Provider = { provide: 'ep:notes/search', useClass: ep___notes_search.default };
 const $notes_show: Provider = { provide: 'ep:notes/show', useClass: ep___notes_show.default };
@@ -969,6 +979,8 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$following_requests_list,
 		$following_requests_sent,
 		$following_requests_reject,
+		$following_requests_history,
+		$following_history,
 		$gallery_featured,
 		$gallery_popular,
 		$gallery_posts,
@@ -1078,6 +1090,9 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$notes_reactions_delete,
 		$notes_renotes,
 		$notes_replies,
+		$notes_schedule_create,
+		$notes_schedule_delete,
+		$notes_schedule_list,
 		$notes_searchByTag,
 		$notes_search,
 		$notes_show,
@@ -1354,6 +1369,8 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$following_requests_cancel,
 		$following_requests_list,
 		$following_requests_reject,
+		$following_requests_history,
+		$following_history,
 		$gallery_featured,
 		$gallery_popular,
 		$gallery_posts,
@@ -1463,6 +1480,9 @@ const $reversi_verify: Provider = { provide: 'ep:reversi/verify', useClass: ep__
 		$notes_reactions_delete,
 		$notes_renotes,
 		$notes_replies,
+		$notes_schedule_create,
+		$notes_schedule_delete,
+		$notes_schedule_list,
 		$notes_searchByTag,
 		$notes_search,
 		$notes_show,

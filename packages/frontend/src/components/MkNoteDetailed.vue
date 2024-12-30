@@ -36,7 +36,10 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<i v-if="isMyRenote" class="ti ti-dots" style="margin-right: 4px;"></i>
 				<MkTime :time="note.createdAt"/>
 			</button>
-			<span v-if="note.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[note.visibility]">
+			<span v-if="note.visibility === 'public' && note.dontShowOnLtl === true" style="margin-left: 0.5em;" :title="i18n.ts._visibility['public_non_ltl']">
+				<i class="ti ti-broadcast"></i>
+			</span>
+			<span v-else-if="note.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[note.visibility]">
 				<i v-if="note.visibility === 'home'" class="ti ti-home"></i>
 				<i v-else-if="note.visibility === 'followers'" class="ti ti-lock"></i>
 				<i v-else-if="note.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
@@ -54,7 +57,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 					</MkA>
 					<span v-if="appearNote.user.isBot" :class="$style.isBot">bot</span>
 					<div :class="$style.noteHeaderInfo">
-						<span v-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[appearNote.visibility]">
+						<span v-if="appearNote.visibility === 'public' && appearNote.dontShowOnLtl === true" style="margin-left: 0.5em;" :title="i18n.ts._visibility['public_non_ltl']">
+							<i class="ti ti-broadcast"></i>
+						</span>
+						<span v-else-if="appearNote.visibility !== 'public'" style="margin-left: 0.5em;" :title="i18n.ts._visibility[appearNote.visibility]">
+
 							<i v-if="appearNote.visibility === 'home'" class="ti ti-home"></i>
 							<i v-else-if="appearNote.visibility === 'followers'" class="ti ti-lock"></i>
 							<i v-else-if="appearNote.visibility === 'specified'" ref="specified" class="ti ti-mail"></i>
@@ -122,6 +129,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkA :to="notePage(appearNote)">
 					<MkTime :time="appearNote.createdAt" mode="detail" colored/>
 				</MkA>
+				<span v-if="appearNote.deleteAt"><i class="ti ti-bomb"></i>{{ i18n.ts.scheduledNoteDelete }}: <MkTime :time="appearNote.deleteAt" mode="detail" colored/></span>
 			</div>
 			<MkReactionsViewer v-if="appearNote.reactionAcceptance !== 'likeOnly'" ref="reactionsViewer" :note="appearNote"/>
 			<button class="_button" :class="$style.noteFooterButton" @click="reply()">
@@ -141,11 +149,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<button v-else class="_button" :class="$style.noteFooterButton" disabled>
 				<i class="ti ti-ban"></i>
 			</button>
+			<button v-if="appearNote.myReaction == null && defaultStore.state.showLikeButton" ref="heartReactButton" v-tooltip="i18n.ts.like" :class="$style.noteFooterButton" class="_button" @mousedown="heartReact()">
+				<i class="ti ti-heart"></i>
+			</button>
 			<button ref="reactButton" :class="$style.noteFooterButton" class="_button" @click="toggleReact()">
 				<i v-if="appearNote.reactionAcceptance === 'likeOnly' && appearNote.myReaction != null" class="ti ti-heart-filled" style="color: var(--MI_THEME-love);"></i>
 				<i v-else-if="appearNote.myReaction != null" class="ti ti-minus" style="color: var(--MI_THEME-accent);"></i>
 				<i v-else-if="appearNote.reactionAcceptance === 'likeOnly'" class="ti ti-heart"></i>
-				<i v-else class="ti ti-plus"></i>
+				<i v-else class="ti ti-mood-plus"></i>
 				<p v-if="(appearNote.reactionAcceptance === 'likeOnly' || defaultStore.state.showReactionsCount) && appearNote.reactionCount > 0" :class="$style.noteFooterButtonCount">{{ number(appearNote.reactionCount) }}</p>
 			</button>
 			<button v-if="defaultStore.state.showClipButtonInNoteFooter" ref="clipButton" class="_button" :class="$style.noteFooterButton" @mousedown.prevent="clip()">
@@ -181,9 +192,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 		<div v-else-if="tab === 'reactions'" :class="$style.tab_reactions">
 			<div :class="$style.reactionTabs">
-				<button v-for="reaction in Object.keys(appearNote.reactions)" :key="reaction" :class="[$style.reactionTab, { [$style.reactionTabActive]: reactionTabType === reaction }]" class="_button" @click="reactionTabType = reaction">
+				<button v-for="reaction in Object.keys(appearNote.reactions)" :key="reaction" :class="[$style.reactionTab, { [$style.reactionTabActive]: reactionTabType === reaction }]" class="_button" @click="reactionTabType = defaultStore.state.hideReactionUsers ? null : reaction">
 					<MkReactionIcon :reaction="reaction"/>
-					<span style="margin-left: 4px;">{{ appearNote.reactions[reaction] }}</span>
+					<span v-if="!hideReactionCount" style="margin-left: 4px;">{{ appearNote.reactions[reaction] }}</span>
 				</button>
 			</div>
 			<MkPagination v-if="reactionTabType" :key="reactionTabType" :pagination="reactionsPagination" :disableAutoLoad="true">
@@ -290,6 +301,7 @@ const menuButton = shallowRef<HTMLElement>();
 const renoteButton = shallowRef<HTMLElement>();
 const renoteTime = shallowRef<HTMLElement>();
 const reactButton = shallowRef<HTMLElement>();
+const heartReactButton = shallowRef<HTMLElement>();
 const clipButton = shallowRef<HTMLElement>();
 const appearNote = computed(() => getAppearNote(note.value));
 const galleryEl = shallowRef<InstanceType<typeof MkMediaList>>();
@@ -305,6 +317,15 @@ const showTicker = (defaultStore.state.instanceTicker === 'always') || (defaultS
 const conversation = ref<Misskey.entities.Note[]>([]);
 const replies = ref<Misskey.entities.Note[]>([]);
 const canRenote = computed(() => ['public', 'home'].includes(appearNote.value.visibility) || appearNote.value.userId === $i?.id);
+const hideReactionCount = computed(() => {
+	switch (defaultStore.state.hideReactionCount) {
+		case 'none': return false;
+		case 'all': return true;
+		case 'self': return props.note.userId === $i?.id;
+		case 'others': return props.note.userId !== $i?.id;
+		default: return false;
+	}
+});
 
 const pleaseLoginContext = computed<OpenOnRemoteOptions>(() => ({
 	type: 'lookup',
@@ -463,6 +484,32 @@ function react(): void {
 		}, () => {
 			focus();
 		});
+	}
+}
+
+function heartReact(): void {
+	pleaseLogin(undefined, pleaseLoginContext.value);
+	showMovedDialog();
+
+	sound.playMisskeySfx('reaction');
+
+	const selectreact = defaultStore.state.selectReaction;
+
+	misskeyApi('notes/reactions/create', {
+		noteId: appearNote.value.id,
+		reaction: selectreact,
+	});
+
+	if (appearNote.value.text && appearNote.value.text.length > 100 && (Date.now() - new Date(appearNote.value.createdAt).getTime() < 1000 * 3)) {
+		claimAchievement('reactWithoutRead');
+	}
+
+	const el = heartReactButton.value;
+	if (el) {
+		const rect = el.getBoundingClientRect();
+		const x = rect.left + (el.offsetWidth / 2);
+		const y = rect.top + (el.offsetHeight / 2);
+		os.popup(MkRippleEffect, { x, y }, {}, 'end');
 	}
 }
 

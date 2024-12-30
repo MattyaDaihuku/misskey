@@ -19,6 +19,7 @@ import { UtilityService } from '@/core/UtilityService.js';
 import { query } from '@/misc/prelude/url.js';
 import type { Serialized } from '@/types.js';
 import { ModerationLogService } from '@/core/ModerationLogService.js';
+import { DriveService } from '@/core/DriveService.js';
 
 const parseEmojiStrRegexp = /^([-\w]+)(?:@([\w.-]+))?$/;
 
@@ -39,6 +40,7 @@ export class CustomEmojiService implements OnApplicationShutdown {
 		private emojiEntityService: EmojiEntityService,
 		private moderationLogService: ModerationLogService,
 		private globalEventService: GlobalEventService,
+		private driveService: DriveService,
 	) {
 		this.emojisCache = new MemoryKVCache<MiEmoji | null>(1000 * 60 * 60 * 12); // 12h
 
@@ -68,6 +70,19 @@ export class CustomEmojiService implements OnApplicationShutdown {
 		localOnly: boolean;
 		roleIdsThatCanBeUsedThisEmojiAsReaction: MiRole['id'][];
 	}, moderator?: MiUser): Promise<MiEmoji> {
+		const originalDriveData: MiDriveFile = data.driveFile;
+
+		// システムユーザーとして再アップロード
+		if (!data.driveFile.user?.isRoot) {
+			data.driveFile = await this.driveService.uploadFromUrl({
+				url: data.driveFile.url,
+				user: null,
+				force: true,
+			});
+
+			// 元データの削除
+			this.driveService.deleteFile(originalDriveData);
+		}
 		const emoji = await this.emojisRepository.insertOne({
 			id: this.idService.gen(),
 			updatedAt: new Date(),

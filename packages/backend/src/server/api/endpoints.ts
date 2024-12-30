@@ -195,6 +195,8 @@ import * as ep___following_requests_cancel from './endpoints/following/requests/
 import * as ep___following_requests_list from './endpoints/following/requests/list.js';
 import * as ep___following_requests_sent from './endpoints/following/requests/sent.js';
 import * as ep___following_requests_reject from './endpoints/following/requests/reject.js';
+import * as ep___following_requests_history from './endpoints/following/history.js';
+import * as ep___following_history from './endpoints/following/requests/history.js';
 import * as ep___gallery_featured from './endpoints/gallery/featured.js';
 import * as ep___gallery_popular from './endpoints/gallery/popular.js';
 import * as ep___gallery_posts from './endpoints/gallery/posts.js';
@@ -304,6 +306,9 @@ import * as ep___notes_reactions_create from './endpoints/notes/reactions/create
 import * as ep___notes_reactions_delete from './endpoints/notes/reactions/delete.js';
 import * as ep___notes_renotes from './endpoints/notes/renotes.js';
 import * as ep___notes_replies from './endpoints/notes/replies.js';
+import * as ep___notes_schedule_create from './endpoints/notes/schedule/create.js';
+import * as ep___notes_schedule_delete from './endpoints/notes/schedule/delete.js';
+import * as ep___notes_schedule_list from './endpoints/notes/schedule/list.js';
 import * as ep___notes_searchByTag from './endpoints/notes/search-by-tag.js';
 import * as ep___notes_search from './endpoints/notes/search.js';
 import * as ep___notes_show from './endpoints/notes/show.js';
@@ -581,6 +586,8 @@ const eps = [
 	['following/requests/list', ep___following_requests_list],
 	['following/requests/sent', ep___following_requests_sent],
 	['following/requests/reject', ep___following_requests_reject],
+	['following/requests/history', ep___following_requests_history],
+	['following/history', ep___following_history],
 	['gallery/featured', ep___gallery_featured],
 	['gallery/popular', ep___gallery_popular],
 	['gallery/posts', ep___gallery_posts],
@@ -690,6 +697,9 @@ const eps = [
 	['notes/reactions/delete', ep___notes_reactions_delete],
 	['notes/renotes', ep___notes_renotes],
 	['notes/replies', ep___notes_replies],
+	['notes/schedule/create', ep___notes_schedule_create],
+	['notes/schedule/delete', ep___notes_schedule_delete],
+	['notes/schedule/list', ep___notes_schedule_list],
 	['notes/search-by-tag', ep___notes_searchByTag],
 	['notes/search', ep___notes_search],
 	['notes/show', ep___notes_show],

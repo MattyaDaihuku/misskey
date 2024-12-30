@@ -96,6 +96,10 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'account',
 		default: true,
 	},
+	draftSavingBehavior: {
+		where: 'account',
+		default: 'auto' as 'auto' | 'manual',
+	},
 	rememberNoteVisibility: {
 		where: 'account',
 		default: false,
@@ -107,6 +111,14 @@ export const defaultStore = markRaw(new Storage('base', {
 	defaultNoteLocalOnly: {
 		where: 'account',
 		default: false,
+	},
+	defaultScheduledNoteDelete: {
+		where: 'account',
+		default: false,
+	},
+	defaultScheduledNoteDeleteTime: {
+		where: 'account',
+		default: 86400000,
 	},
 	uploadFolder: {
 		where: 'account',
@@ -154,6 +166,22 @@ export const defaultStore = markRaw(new Storage('base', {
 			'search',
 			'-',
 			'ui',
+		],
+	},
+	postFormActions: {
+		where: 'deviceAccount',
+		default: [
+			'attachFile',
+			'poll',
+			'scheduledNoteDelete',
+			'useCw',
+			'mention',
+			'hashtags',
+			'plugins',
+			'emoji',
+			'addMfmFunction',
+			'scheduleNote',
+			'schedulePostList',
 		],
 	},
 	visibility: {
@@ -250,6 +278,22 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false,
 	},
+	hiddenActivityAndFiles: {
+		where: 'device',
+		default: false,
+	},
+	hiddenPinnedNotes: {
+		where: 'device',
+		default: false,
+	},
+	hiddenActivity: {
+		where: 'device',
+		default: false,
+	},
+	hiddenFiles: {
+		where: 'device',
+		default: false,
+	},
 	disableShowingAnimatedImages: {
 		where: 'device',
 		default: window.matchMedia('(prefers-reduced-motion)').matches,
@@ -294,9 +338,17 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: false,
 	},
+	customFont: {
+		where: 'device',
+		default: null as null | string,
+	},
 	instanceTicker: {
 		where: 'device',
 		default: 'remote' as 'none' | 'remote' | 'always',
+	},
+	instanceIcon: {
+		where: 'device',
+		default: false,
 	},
 	emojiPickerScale: {
 		where: 'device',
@@ -369,6 +421,22 @@ export const defaultStore = markRaw(new Storage('base', {
 	reactionsDisplaySize: {
 		where: 'device',
 		default: 'medium' as 'small' | 'medium' | 'large',
+	},
+	selectReaction: {
+		where: 'device',
+		default: '🤍' as string,
+	},
+	showLikeButton: {
+		where: 'device',
+		default: true,
+	},
+	hideReactionUsers: {
+		where: 'account',
+		default: false,
+	},
+	hideReactionCount: {
+		where: 'account',
+		default: 'none' as 'none' | 'self' | 'others' | 'all',
 	},
 	limitWidthOfReaction: {
 		where: 'device',
@@ -470,6 +538,23 @@ export const defaultStore = markRaw(new Storage('base', {
 		where: 'device',
 		default: 'app' as 'app' | 'appWithShift' | 'native',
 	},
+	disableNoteNyaize: {
+		where: 'device',
+		default: false,
+	},
+	hideLocalTimeLine: {
+		where: 'device',
+		default: false,
+	},
+	hideSocialTimeLine: {
+		where: 'device',
+		default: false,
+	},
+	hideGlobalTimeLine: {
+		where: 'device',
+		default: false,
+	},
+
 	skipNoteRender: {
 		where: 'device',
 		default: true,
@@ -502,6 +587,10 @@ export const defaultStore = markRaw(new Storage('base', {
 	sound_reaction: {
 		where: 'device',
 		default: { type: 'syuilo/bubble2', volume: 1 } as SoundStore,
+	},
+	reactionChecksMuting: {
+		where: 'device',
+		default: true,
 	},
 }));
 

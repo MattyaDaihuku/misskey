@@ -183,6 +183,9 @@ export class ApRendererService {
 				// || emoji.originalUrl してるのは後方互換性のため（publicUrlはstringなので??はだめ）
 				url: emoji.publicUrl || emoji.originalUrl,
 			},
+			_misskey_license: {
+				freeText: emoji.license
+			},
 		};
 	}
 
@@ -361,7 +364,7 @@ export class ApRendererService {
 		let to: string[] = [];
 		let cc: string[] = [];
 
-		if (note.visibility === 'public') {
+		if (note.visibility === 'public' || note.visibility === 'public_non_ltl') {
 			to = ['https://www.w3.org/ns/activitystreams#Public'];
 			cc = [`${attributedTo}/followers`].concat(mentions);
 		} else if (note.visibility === 'home') {

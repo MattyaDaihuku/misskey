@@ -311,6 +311,10 @@ export interface Locale extends ILocale {
      */
     "mentions": string;
     /**
+     * 新規投稿
+     */
+    "newNotes": string;
+    /**
      * ダイレクト投稿
      */
     "directNotes": string;
@@ -1543,6 +1547,18 @@ export interface Locale extends ILocale {
      */
     "disablingTimelinesInfo": string;
     /**
+     * ローカルタイムラインを非表示にする
+     */
+    "hideLocalTimeLine": string;
+    /**
+     * ソーシャルタイムラインを非表示にする
+     */
+    "hideSocialTimeLine": string;
+    /**
+     * グローバルタイムラインを非表示にする
+     */
+    "hideGlobalTimeLine": string;
+    /**
      * 登録
      */
     "registration": string;
@@ -2150,6 +2166,10 @@ export interface Locale extends ILocale {
      * フォントサイズ
      */
     "fontSize": string;
+    /**
+     * カスタムフォント
+     */
+    "customFont": string;
     /**
      * 画像が1枚のみのメディアリストの高さ
      */
@@ -2831,6 +2851,14 @@ export interface Locale extends ILocale {
      */
     "useGlobalSettingDesc": string;
     /**
+     * フォローリクエストを自動で拒否する
+     */
+    "autoRejectFollowRequest": string;
+    /**
+     * フォローリクエストを自動で拒否するようにします。「フォロー中ユーザーからのフォロリクを自動承認」がONになっている場合は、フォロー中ユーザーからのフォローリクエストは自動的に承認され、それ以外のユーザーからのフォローリクエストは自動的に拒否されるようになります。
+     */
+    "autoRejectFollowRequestDescription": string;
+    /**
      * その他
      */
     "other": string;
@@ -2922,6 +2950,10 @@ export interface Locale extends ILocale {
      * ノートのサーバー情報
      */
     "instanceTicker": string;
+    /**
+     * サーバー情報をアイコンのみにする
+     */
+    "instanceIcon": string;
     /**
      * {x}を待っています
      */
@@ -3991,6 +4023,10 @@ export interface Locale extends ILocale {
      */
     "beta": string;
     /**
+     * 独自機能
+     */
+    "originalFeature": string;
+    /**
      * 自動センシティブ判定
      */
     "enableAutoSensitive": string;
@@ -4330,6 +4366,14 @@ export interface Locale extends ILocale {
      * スペースで区切るとAND指定になり、キーワードをスラッシュで囲むと正規表現になります。
      */
     "prohibitedWordsDescription2": string;
+    /**
+     * カスタムスプラッシュテキスト
+     */
+    "customSplashText": string;
+    /**
+     * ロード画面に表示されるテキストを設定します。改行で区切って複数設定できます。
+     */
+    "customSplashTextDescription": string;
     /**
      * 非表示ハッシュタグ
      */
@@ -4735,6 +4779,10 @@ export interface Locale extends ILocale {
      */
     "forYou": string;
     /**
+     * あなたのロールへ
+     */
+    "forYourRoles": string;
+    /**
      * 現在のお知らせ
      */
     "currentAnnouncements": string;
@@ -4886,6 +4934,10 @@ export interface Locale extends ILocale {
      * 運営者情報URL
      */
     "impressumUrl": string;
+    /**
+     * しゃふすきーポータル
+     */
+    "shahuPortal": string;
     /**
      * ドイツなどの一部の国と地域では表示が義務付けられています(Impressum)。
      */
@@ -5067,6 +5119,50 @@ export interface Locale extends ILocale {
      */
     "gameRetry": string;
     /**
+     * アクティビティを非公開にする
+     */
+    "hideActivity": string;
+    /**
+     * 自分のプロフィールのアクティビティ (概要/アクティビティタブ) を他人が見れないようにします。このオプションを有効にしても、自分であればプロフィールのアクティビティタブから引き続き閲覧できます。
+     */
+    "hideActivityDescription": string;
+    /**
+     * 投稿フォームをリセット
+     */
+    "clearPost": string;
+    /**
+     * 絵文字ピッカーに追加
+     */
+    "addToEmojiPicker": string;
+    /**
+     * リアクション数の非表示
+     */
+    "hideReactionCount": string;
+    /**
+     * 誰がリアクションをしたのかを非表示にする
+     */
+    "hideReactionUsers": string;
+    /**
+     * リアクションをホバーした際のユーザー一覧と、ノート詳細ページのリアクションタブにあるリアクションをしたユーザー一覧を非表示にします
+     */
+    "hideReactionUsersDescription": string;
+    /**
+     * デフォルトでノートが消えるように
+     */
+    "defaultScheduledNoteDelete": string;
+    /**
+     * 1年以上先の日時を指定することはできません
+     */
+    "cannotScheduleLaterThanOneYear": string;
+    /**
+     * 「すぐ消す」の初期値
+     */
+    "defaultScheduledNoteDeleteTime": string;
+    /**
+     * 「すぐ消す」が有効になっています
+     */
+    "scheduledNoteDeleteEnabled": string;
+    /**
      * 使用しない場合は空欄にしてください
      */
     "notUsePleaseLeaveBlank": string;
@@ -5106,6 +5202,42 @@ export interface Locale extends ILocale {
      * お問い合わせ
      */
     "inquiry": string;
+    /**
+     * すぐ消す
+     */
+    "scheduledNoteDelete": string;
+    /**
+     * このノートは{time}に削除されます
+     */
+    "noteDeletationAt": ParameterizedString<"time">;
+    /**
+     * このお知らせはチャンネルのタイムライン上部に表示されます。最初の1行がタイトルとして表示され、2行目以降はお知らせをタップすることで表示されるようになります。
+     */
+    "channelAnnouncementDescription": string;
+    /**
+     * 投稿フォーム
+     */
+    "postForm": string;
+    /**
+     * 投稿フォームの下部に表示される項目の並び替えが出来ます。項目をクリックすると削除できます。
+     */
+    "postFormBottomSettingsDescription": string;
+    /**
+     * 下書き
+     */
+    "drafts": string;
+    /**
+     * 下書きの保存に関する動作
+     */
+    "draftSavingBehavior": string;
+    /**
+     * 下書きとして保存
+     */
+    "saveAsDraft": string;
+    /**
+     * 下書きを適用すると現在入力されている内容はリセットされます。よろしいですか？
+     */
+    "draftOverwriteConfirm": string;
     /**
      * もう一度お試しください。
      */
@@ -5327,6 +5459,14 @@ export interface Locale extends ILocale {
             "autoSuspendedForNotResponding": string;
         };
     };
+    /**
+     * いいねボタンで使うリアクションを選択
+     */
+    "selectReaction": string;
+    /**
+     * いいねボタンを表示する
+     */
+    "showLikeButton": string;
     "_bubbleGame": {
         /**
          * 遊び方
@@ -5381,6 +5521,10 @@ export interface Locale extends ILocale {
             "section3": string;
         };
     };
+    /**
+     * nayizeを無効化する
+     */
+    "disableNoteNyaize": string;
     "_announcement": {
         /**
          * 既存ユーザーのみ
@@ -5624,6 +5768,10 @@ export interface Locale extends ILocale {
                  * すべてのユーザーに公開。
                  */
                 "public": string;
+                /**
+                 * 全てのユーザーに公開されますが、LTLには掲載されません
+                 */
+                "public_non_ltl": string;
                 /**
                  * ホームタイムラインのみに公開。フォロワー・プロフィールを見に来た人・リノートから、他のユーザーも見ることができます。
                  */
@@ -7001,6 +7149,10 @@ export interface Locale extends ILocale {
              * リストのインポートを許可
              */
             "canImportUserLists": string;
+            /**
+             * 予約投稿の最大数
+             */
+            "scheduleNoteMax": string;
         };
         "_condition": {
             /**
@@ -8097,6 +8249,21 @@ export interface Locale extends ILocale {
          */
         "backupCodesExhaustedWarning": string;
         /**
+         * バックアップコードを保存しましたか？
+         */
+        "backupCodesSavedConfirmTitle": string;
+        /**
+         * 二要素認証アプリとバックアップコードの両方を紛失した場合、アカウントにアクセスできなくなります。
+         * 誰とも共有せず、適切な方法で保管してください。
+         *
+         * $[x2 二要素認証設定は自分以外の誰にも変更できませんので、$[fg.color=red 運営チームも無効化することはできません。]]
+         */
+        "backupCodesSavedConfirmDescription": string;
+        /**
+         * バックアップコードを保存しました
+         */
+        "backupCodesSavedConfirmChecked": string;
+        /**
          * 詳細なガイドはこちら
          */
         "moreDetailedGuideHere": string;
@@ -8438,6 +8605,14 @@ export interface Locale extends ILocale {
          * 違反を報告する
          */
         "write:report-abuse": string;
+        /**
+         * 予約投稿を見る
+         */
+        "read:notes-schedule": string;
+        /**
+         * 予約投稿を作成・削除する
+         */
+        "write:notes-schedule": string;
     };
     "_auth": {
         /**
@@ -8774,6 +8949,14 @@ export interface Locale extends ILocale {
          * 全てのユーザーに公開
          */
         "publicDescription": string;
+        /**
+         * セミパブリック
+         */
+        "public_non_ltl": string;
+        /**
+         * 全てのユーザーに公開（ローカルタイムラインには表示されません）
+         */
+        "public_non_ltlDescription": string;
         /**
          * ホーム
          */
@@ -9401,6 +9584,14 @@ export interface Locale extends ILocale {
          */
         "roleAssigned": string;
         /**
+         * 予約投稿に失敗しました
+         */
+        "scheduledNoteFailed": string;
+        /**
+         * 予約投稿をノートしました
+         */
+        "scheduledNotePosted": string;
+        /**
          * プッシュ通知の更新をしました
          */
         "emptyPushNotificationMessage": string;
@@ -9437,6 +9628,10 @@ export interface Locale extends ILocale {
          */
         "renotedBySomeUsers": ParameterizedString<"n">;
         /**
+         * {n}件の新しい投稿
+         */
+        "notedBySomeUsers": ParameterizedString<"n">;
+        /**
          * {n}人にフォローされました
          */
         "followedBySomeUsers": ParameterizedString<"n">;
@@ -9452,6 +9647,20 @@ export interface Locale extends ILocale {
          * ログインがありました
          */
         "login": string;
+        /**
+         * {ip}でログインされました。
+         * 承認されていない機器であれば、セキュリティのために「{text}」を通じてすべての機器でログアウトを行ってください。
+         */
+        "loginDescription": ParameterizedString<"ip" | "text">;
+        /**
+         * ログインに失敗しました
+         */
+        "loginFailed": string;
+        /**
+         * {ip}からのログインに失敗しました。
+         * 自身のip以外でのログインが行われている場合、セキュリティのために設定にてパスワードを変更してください。
+         */
+        "loginFailedDescription": ParameterizedString<"ip">;
         "_types": {
             /**
              * すべて
@@ -10497,6 +10706,46 @@ export interface Locale extends ILocale {
          */
         "loop": string;
     };
+    "_profileHiddenSettings": {
+        /**
+         * プロフィールを非表示にする機能
+         */
+        "hiddenProfile": string;
+        /**
+         * プロフィール上からピン留めしたノートを非表示にします
+         */
+        "hiddenPinnedNotes": string;
+        /**
+         * ピン留めしたノートを非表示にすることで、プロフィールページをスッキリさせることができます。
+         */
+        "hiddenPinnedNotesDescription": string;
+        /**
+         * プロフィール上からアクティビティを非表示にします
+         */
+        "hiddenActivity": string;
+        /**
+         * プロフィール上からアクティビティを非表示にすることで、プロフィールページをスッキリさせることができます。
+         */
+        "hiddenActivityDescription": string;
+        /**
+         * プロフィール上からファイルを非表示にします。
+         */
+        "hiddenFiles": string;
+        /**
+         * ファイルを非表示にすることで、プロフィールページをスッキリさせることができます。
+         */
+        "hiddenFilesDescription": string;
+    };
+    "_draftSavingBehavior": {
+        /**
+         * 自動的に保存する
+         */
+        "auto": string;
+        /**
+         * 都度確認する
+         */
+        "manual": string;
+    };
     "_contextMenu": {
         /**
          * コンテキストメニュー
@@ -10514,6 +10763,16 @@ export interface Locale extends ILocale {
          * ブラウザのUI
          */
         "native": string;
+    };
+    "_reactionChecksMuting": {
+        /**
+         * リアクションでミュートを考慮する
+         */
+        "title": string;
+        /**
+         * リアクションがミュートを考慮しますが、キャッシュが効かず通信量が増えることがあります。
+         */
+        "caption": string;
     };
     "_embedCodeGen": {
         /**
@@ -10600,6 +10859,200 @@ export interface Locale extends ILocale {
          * 送った申請
          */
         "sent": string;
+    };
+    "_hideReactionCount": {
+        /**
+         * 非表示にしない
+         */
+        "none": string;
+        /**
+         * 自分のノートのみ
+         */
+        "self": string;
+        /**
+         * 自分以外のノートのみ
+         */
+        "others": string;
+        /**
+         * 全てのノート
+         */
+        "all": string;
+    };
+    /**
+     * 予約投稿
+     */
+    "schedulePost": string;
+    /**
+     * 予約投稿一覧
+     */
+    "schedulePostList": string;
+    "_followRequestHistory": {
+        /**
+         * フォロリクの履歴
+         */
+        "title": string;
+        /**
+         * {user} へフォローリクエストを送信
+         */
+        "sent": ParameterizedString<"user">;
+        /**
+         * {user} からフォローリクエストを受信
+         */
+        "received": ParameterizedString<"user">;
+        /**
+         * {user} のフォローリクエストを許可
+         */
+        "approved": ParameterizedString<"user">;
+        /**
+         * {user} のフォローリクエストを拒否
+         */
+        "rejected": ParameterizedString<"user">;
+        /**
+         * {user} にフォローリクエストが許可された
+         */
+        "wasApproved": ParameterizedString<"user">;
+        /**
+         * {user} にフォローリクエストが拒否された
+         */
+        "wasRejected": ParameterizedString<"user">;
+        /**
+         * 履歴はありません
+         */
+        "empty": string;
+        /**
+         * フィルター
+         */
+        "filter": string;
+        /**
+         * 履歴をすべて削除
+         */
+        "deleteAll": string;
+        /**
+         * すべてのフォローリクエスト履歴を削除してもよろしいですか？ この操作は元に戻せません。
+         */
+        "deleteConfirm": string;
+        "types": {
+            /**
+             * すべて
+             */
+            "all": string;
+            /**
+             * 送信済み
+             */
+            "sent": string;
+            /**
+             * 受信済み
+             */
+            "received": string;
+            /**
+             * 許可済み
+             */
+            "approved": string;
+            /**
+             * 拒否済み
+             */
+            "rejected": string;
+            /**
+             * 許可された
+             */
+            "wasApproved": string;
+            /**
+             * 拒否された
+             */
+            "wasRejected": string;
+        };
+    };
+    "_followHistory": {
+        /**
+         * フォローの履歴
+         */
+        "title": string;
+        /**
+         * {user} をフォローした
+         */
+        "follow": ParameterizedString<"user">;
+        /**
+         * {user} のフォローを解除
+         */
+        "unFollow": ParameterizedString<"user">;
+        /**
+         * {user} にフォローされた
+         */
+        "wasFollow": ParameterizedString<"user">;
+        /**
+         * {user} からフォロー解除された
+         */
+        "wasUnFollow": ParameterizedString<"user">;
+        /**
+         * {user} をブロックした
+         */
+        "blocked": ParameterizedString<"user">;
+        /**
+         * {user} のブロックを解除した
+         */
+        "unBlocked": ParameterizedString<"user">;
+        /**
+         * {user} にブロックされた
+         */
+        "wasBlocked": ParameterizedString<"user">;
+        /**
+         * {user} にブロックが解除された
+         */
+        "wasUnBlocked": ParameterizedString<"user">;
+        /**
+         * 履歴はありません
+         */
+        "empty": string;
+        /**
+         * フィルター
+         */
+        "filter": string;
+        /**
+         * 履歴をすべて削除
+         */
+        "deleteAll": string;
+        /**
+         * すべてのフォロー関連の履歴を削除してもよろしいですか？ この操作は元に戻せません。
+         */
+        "deleteConfirm": string;
+        "types": {
+            /**
+             * すべて
+             */
+            "all": string;
+            /**
+             * フォローした
+             */
+            "follow": string;
+            /**
+             * フォロー解除した
+             */
+            "unFollow": string;
+            /**
+             * フォローされた
+             */
+            "wasFollow": string;
+            /**
+             * フォロー解除された
+             */
+            "wasUnFollow": string;
+            /**
+             * ブロックした
+             */
+            "blocked": string;
+            /**
+             * ブロック解除した
+             */
+            "unBlocked": string;
+            /**
+             * ブロックされた
+             */
+            "wasBlocked": string;
+            /**
+             * ブロックが解除された
+             */
+            "wasUnBlocked": string;
+        };
     };
 }
 declare const locales: {

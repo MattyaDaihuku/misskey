@@ -1771,6 +1771,24 @@ export type paths = {
      */
     post: operations['following___requests___reject'];
   };
+  '/following/requests/history': {
+    /**
+     * following/requests/history
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *read:following*
+     */
+    post: operations['following___requests___history'];
+  };
+  '/following/history': {
+    /**
+     * following/history
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *read:following*
+     */
+    post: operations['following___history'];
+  };
   '/gallery/featured': {
     /**
      * gallery/featured
@@ -2826,6 +2844,33 @@ export type paths = {
      * **Credential required**: *No*
      */
     post: operations['notes___replies'];
+  };
+  '/notes/schedule/create': {
+    /**
+     * notes/schedule/create
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:notes-schedule*
+     */
+    post: operations['notes___schedule___create'];
+  };
+  '/notes/schedule/delete': {
+    /**
+     * notes/schedule/delete
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *write:notes-schedule*
+     */
+    post: operations['notes___schedule___delete'];
+  };
+  '/notes/schedule/list': {
+    /**
+     * notes/schedule/list
+     * @description No description provided.
+     *
+     * **Credential required**: *Yes* / **Permission**: *read:notes-schedule*
+     */
+    post: operations['notes___schedule___list'];
   };
   '/notes/search-by-tag': {
     /**
@@ -4072,6 +4117,8 @@ export type components = {
       needConfirmationToRead: boolean;
       silence: boolean;
       forYou: boolean;
+      forYourRoles: boolean;
+      roleNames: string[];
       isRead?: boolean;
     };
     App: {
@@ -4127,6 +4174,8 @@ export type components = {
             votes: number;
           }[];
       }) | null;
+      /** Format: date-time */
+      deleteAt?: string | null;
       emojis?: {
         [key: string]: string;
       };
@@ -4160,6 +4209,7 @@ export type components = {
       reactionAndUserPairCache?: string[];
       clippedCount?: number;
       myReaction?: string | null;
+      dontShowOnLtl: boolean;
     };
     NoteReaction: {
       /**
@@ -4328,6 +4378,15 @@ export type components = {
       createdAt: string;
       /** @enum {string} */
       type: 'login';
+      ip: string;
+    } | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'loginFailed';
+      ip: string;
     } | ({
       /** Format: id */
       id: string;
@@ -4339,6 +4398,25 @@ export type components = {
       header: string | null;
       icon: string | null;
     }) | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'scheduledNoteFailed';
+      reason: string;
+    } | {
+      /** Format: id */
+      id: string;
+      /** Format: date-time */
+      createdAt: string;
+      /** @enum {string} */
+      type: 'scheduledNotePosted';
+      user: components['schemas']['UserLite'];
+      /** Format: id */
+      userId: string;
+      note: components['schemas']['Note'];
+    } | {
       /** Format: id */
       id: string;
       /** Format: date-time */
@@ -4592,6 +4670,7 @@ export type components = {
       isFollowing?: boolean;
       isFavorited?: boolean;
       pinnedNotes?: components['schemas']['Note'][];
+      announcement: string | null;
     };
     QueueCount: {
       waiting: number;
@@ -4881,6 +4960,7 @@ export type components = {
       canImportFollowing: boolean;
       canImportMuting: boolean;
       canImportUserLists: boolean;
+      scheduleNoteMax: number;
     };
     ReversiGameLite: {
       /** Format: id */
@@ -5138,6 +5218,7 @@ export type operations = {
             prohibitedWords: string[];
             prohibitedWordsForNameOfUser: string[];
             bannedEmailDomains?: string[];
+            emailWhitelist: boolean;
             preservedUsernames: string[];
             hcaptchaSecretKey: string | null;
             mcaptchaSecretKey: string | null;
@@ -5223,6 +5304,7 @@ export type operations = {
             urlPreviewSummaryProxyUrl: string | null;
             federation: string;
             federationHosts: string[];
+            customSplashText: string[];
           };
         };
       };
@@ -6066,6 +6148,10 @@ export type operations = {
            * @default null
            */
           userId?: string | null;
+          /** @default false */
+          isRoleSpecified?: boolean;
+          /** @default null */
+          roleIds?: string[] | null;
         };
       };
     };
@@ -6216,6 +6302,12 @@ export type operations = {
               text: string;
               title: string;
               imageUrl: string | null;
+              isRoleSpecified: boolean;
+              roles: {
+                  /** Format: id */
+                  id: string;
+                  name: string;
+                }[];
               reads: number;
             })[];
         };
@@ -6275,6 +6367,8 @@ export type operations = {
           silence?: boolean;
           needConfirmationToRead?: boolean;
           isActive?: boolean;
+          isRoleSpecified?: boolean;
+          roleIds?: string[];
         };
       };
     };
@@ -9578,6 +9672,7 @@ export type operations = {
           enableIdenticonGeneration?: boolean;
           serverRules?: string[];
           bannedEmailDomains?: string[];
+          emailWhitelist?: boolean;
           preservedUsernames?: string[];
           manifestJsonOverride?: string;
           enableFanoutTimeline?: boolean;
@@ -9601,6 +9696,7 @@ export type operations = {
           /** @enum {string} */
           federation?: 'all' | 'none' | 'specified';
           federationHosts?: string[];
+          customSplashText?: string[] | null;
         };
       };
     };
@@ -11717,6 +11813,7 @@ export type operations = {
         'application/json': {
           name: string;
           description?: string | null;
+          announcement?: string | null;
           /** Format: misskey:id */
           bannerId?: string | null;
           color?: string;
@@ -12172,6 +12269,7 @@ export type operations = {
           bannerId?: string | null;
           isArchived?: boolean | null;
           pinnedNoteIds?: string[];
+          announcement?: string | null;
           color?: string;
           isSensitive?: boolean | null;
           allowRenoteToExternal?: boolean | null;
@@ -16165,6 +16263,184 @@ export type operations = {
     };
   };
   /**
+   * following/requests/history
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *read:following*
+   */
+  following___requests___history: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /**
+           * @description Filter by type of action
+           * @enum {string|null}
+           */
+          type?: 'follow' | 'unFollow' | 'wasFollow' | 'wasUnFollow' | 'blocked' | 'unBlocked' | 'wasBlocked' | 'wasUnBlocked';
+          /**
+           * Format: misskey:id
+           * @description Get history after this ID
+           */
+          sinceId?: string;
+          /**
+           * Format: misskey:id
+           * @description Get history before this ID
+           */
+          untilId?: string;
+          /**
+           * @description Number of histories to get
+           * @default 30
+           */
+          limit?: number;
+          /**
+           * @description Delete all histories
+           * @default false
+           */
+          delete?: boolean;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (with results) */
+      200: {
+        content: {
+          'application/json': ({
+              /** Format: id */
+              id: string;
+              /**
+               * @description Filter by type of action
+               * @enum {string|null}
+               */
+              type: 'follow' | 'unFollow' | 'wasFollow' | 'wasUnFollow' | 'blocked' | 'unBlocked' | 'wasBlocked' | 'wasUnBlocked';
+              fromUser: Record<string, never>;
+              toUser: Record<string, never>;
+              /** Format: date-time */
+              timestamp: string;
+            })[];
+        };
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * following/history
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *read:following*
+   */
+  following___history: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /**
+           * @description Filter by type of action
+           * @enum {string|null}
+           */
+          type?: 'sent' | 'received' | 'approved' | 'rejected' | 'wasApproved' | 'wasRejected' | 'wasBlocked' | 'wasUnBlocked';
+          /**
+           * Format: misskey:id
+           * @description Get history after this ID
+           */
+          sinceId?: string;
+          /**
+           * Format: misskey:id
+           * @description Get history before this ID
+           */
+          untilId?: string;
+          /**
+           * @description Number of histories to get
+           * @default 30
+           */
+          limit?: number;
+          /**
+           * @description Delete all histories
+           * @default false
+           */
+          delete?: boolean;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (with results) */
+      200: {
+        content: {
+          'application/json': ({
+              /** Format: id */
+              id: string;
+              /**
+               * @description Filter by type of action
+               * @enum {string|null}
+               */
+              type: 'sent' | 'received' | 'approved' | 'rejected' | 'wasApproved' | 'wasRejected' | 'wasBlocked' | 'wasUnBlocked';
+              fromUser: Record<string, never>;
+              toUser: Record<string, never>;
+              /** Format: date-time */
+              timestamp: string;
+            })[];
+        };
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
    * gallery/featured
    * @description No description provided.
    *
@@ -18781,8 +19057,8 @@ export type operations = {
           untilId?: string;
           /** @default true */
           markAsRead?: boolean;
-          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
-          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
+          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'loginFailed' | 'scheduledNoteFailed' | 'scheduledNotePosted' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
+          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'loginFailed' | 'scheduledNoteFailed' | 'scheduledNotePosted' | 'app' | 'test' | 'pollVote' | 'groupInvited')[];
         };
       };
     };
@@ -18849,8 +19125,8 @@ export type operations = {
           untilId?: string;
           /** @default true */
           markAsRead?: boolean;
-          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
-          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'pollVote' | 'groupInvited')[];
+          includeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'loginFailed' | 'scheduledNoteFailed' | 'scheduledNotePosted' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'note:grouped' | 'pollVote' | 'groupInvited')[];
+          excludeTypes?: ('note' | 'follow' | 'mention' | 'reply' | 'renote' | 'quote' | 'reaction' | 'pollEnded' | 'receiveFollowRequest' | 'followRequestAccepted' | 'roleAssigned' | 'achievementEarned' | 'exportCompleted' | 'login' | 'loginFailed' | 'scheduledNoteFailed' | 'scheduledNotePosted' | 'app' | 'test' | 'reaction:grouped' | 'renote:grouped' | 'note:grouped' | 'pollVote' | 'groupInvited')[];
         };
       };
     };
@@ -19930,6 +20206,7 @@ export type operations = {
           publicReactions?: boolean;
           carefulBot?: boolean;
           autoAcceptFollowed?: boolean;
+          autoRejectFollowRequest?: boolean;
           noCrawle?: boolean;
           preventAiLearning?: boolean;
           requireSigninToViewContents?: boolean;
@@ -21621,7 +21898,7 @@ export type operations = {
            * @default public
            * @enum {string}
            */
-          visibility?: 'public' | 'home' | 'followers' | 'specified';
+          visibility?: 'public' | 'public_non_ltl' | 'home' | 'followers' | 'specified';
           visibleUserIds?: string[];
           cw?: string | null;
           /** @default false */
@@ -21651,6 +21928,10 @@ export type operations = {
             multiple?: boolean;
             expiresAt?: number | null;
             expiredAfter?: number | null;
+          }) | null;
+          scheduledDelete?: ({
+            deleteAt?: number | null;
+            deleteAfter?: number | null;
           }) | null;
         };
       };
@@ -22586,6 +22867,243 @@ export type operations = {
       };
       /** @description I'm Ai */
       418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * notes/schedule/create
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:notes-schedule*
+   */
+  notes___schedule___create: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /**
+           * @default public
+           * @enum {string}
+           */
+          visibility?: 'public' | 'home' | 'followers' | 'specified';
+          visibleUserIds?: string[];
+          cw?: string | null;
+          /**
+           * @default null
+           * @enum {string|null}
+           */
+          reactionAcceptance?: null | 'likeOnly' | 'likeOnlyForRemote' | 'nonSensitiveOnly' | 'nonSensitiveOnlyForLocalLikeOnlyForRemote';
+          /** @default false */
+          noExtractMentions?: boolean;
+          /** @default false */
+          noExtractHashtags?: boolean;
+          /** @default false */
+          noExtractEmojis?: boolean;
+          /** Format: misskey:id */
+          replyId?: string | null;
+          /** Format: misskey:id */
+          renoteId?: string | null;
+          text?: string | null;
+          fileIds?: string[];
+          mediaIds?: string[];
+          poll?: ({
+            choices: string[];
+            multiple?: boolean;
+            expiresAt?: number | null;
+            expiredAfter?: number | null;
+          }) | null;
+          scheduleNote: {
+            scheduledAt?: number;
+          };
+          scheduledDelete?: ({
+            deleteAt?: number | null;
+            deleteAfter?: number | null;
+          }) | null;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * notes/schedule/delete
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *write:notes-schedule*
+   */
+  notes___schedule___delete: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** Format: misskey:id */
+          noteId: string;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (without any results) */
+      204: {
+        content: never;
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Internal server error */
+      500: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+    };
+  };
+  /**
+   * notes/schedule/list
+   * @description No description provided.
+   *
+   * **Credential required**: *Yes* / **Permission**: *read:notes-schedule*
+   */
+  notes___schedule___list: {
+    requestBody: {
+      content: {
+        'application/json': {
+          /** Format: misskey:id */
+          sinceId?: string;
+          /** Format: misskey:id */
+          untilId?: string;
+          /** @default 10 */
+          limit?: number;
+        };
+      };
+    };
+    responses: {
+      /** @description OK (with results) */
+      200: {
+        content: {
+          'application/json': ({
+              /** Format: misskey:id */
+              id: string;
+              note: {
+                createdAt: string;
+                text?: string;
+                cw?: string | null;
+                fileIds: string[];
+                /** @enum {string} */
+                visibility: 'public' | 'public_non_ltl' | 'home' | 'followers' | 'specified';
+                visibleUsers: components['schemas']['UserLite'][];
+                user: components['schemas']['User'];
+                /**
+                 * @default null
+                 * @enum {string|null}
+                 */
+                reactionAcceptance: null | 'likeOnly' | 'likeOnlyForRemote' | 'nonSensitiveOnly' | 'nonSensitiveOnlyForLocalLikeOnlyForRemote';
+                isSchedule: boolean;
+              };
+              userId: string;
+              scheduledAt: string;
+            })[];
+        };
+      };
+      /** @description Client error */
+      400: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Authentication error */
+      401: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description Forbidden error */
+      403: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description I'm Ai */
+      418: {
+        content: {
+          'application/json': components['schemas']['Error'];
+        };
+      };
+      /** @description To many requests */
+      429: {
         content: {
           'application/json': components['schemas']['Error'];
         };

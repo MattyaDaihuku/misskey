@@ -282,6 +282,10 @@ import type {
 	FollowingRequestsSentRequest,
 	FollowingRequestsSentResponse,
 	FollowingRequestsRejectRequest,
+	FollowingRequestsHistoryRequest,
+	FollowingRequestsHistoryResponse,
+	FollowingHistoryRequest,
+	FollowingHistoryResponse,
 	GalleryFeaturedRequest,
 	GalleryFeaturedResponse,
 	GalleryPopularResponse,
@@ -439,6 +443,10 @@ import type {
 	NotesRenotesResponse,
 	NotesRepliesRequest,
 	NotesRepliesResponse,
+	NotesScheduleCreateRequest,
+	NotesScheduleDeleteRequest,
+	NotesScheduleListRequest,
+	NotesScheduleListResponse,
 	NotesSearchByTagRequest,
 	NotesSearchByTagResponse,
 	NotesSearchRequest,
@@ -765,6 +773,8 @@ export type Endpoints = {
 	'following/requests/list': { req: FollowingRequestsListRequest; res: FollowingRequestsListResponse };
 	'following/requests/sent': { req: FollowingRequestsSentRequest; res: FollowingRequestsSentResponse };
 	'following/requests/reject': { req: FollowingRequestsRejectRequest; res: EmptyResponse };
+	'following/requests/history': { req: FollowingRequestsHistoryRequest; res: FollowingRequestsHistoryResponse };
+	'following/history': { req: FollowingHistoryRequest; res: FollowingHistoryResponse };
 	'gallery/featured': { req: GalleryFeaturedRequest; res: GalleryFeaturedResponse };
 	'gallery/popular': { req: EmptyRequest; res: GalleryPopularResponse };
 	'gallery/posts': { req: GalleryPostsRequest; res: GalleryPostsResponse };
@@ -874,6 +884,9 @@ export type Endpoints = {
 	'notes/reactions/delete': { req: NotesReactionsDeleteRequest; res: EmptyResponse };
 	'notes/renotes': { req: NotesRenotesRequest; res: NotesRenotesResponse };
 	'notes/replies': { req: NotesRepliesRequest; res: NotesRepliesResponse };
+	'notes/schedule/create': { req: NotesScheduleCreateRequest; res: EmptyResponse };
+	'notes/schedule/delete': { req: NotesScheduleDeleteRequest; res: EmptyResponse };
+	'notes/schedule/list': { req: NotesScheduleListRequest; res: NotesScheduleListResponse };
 	'notes/search-by-tag': { req: NotesSearchByTagRequest; res: NotesSearchByTagResponse };
 	'notes/search': { req: NotesSearchRequest; res: NotesSearchResponse };
 	'notes/show': { req: NotesShowRequest; res: NotesShowResponse };

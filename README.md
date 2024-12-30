@@ -8,42 +8,48 @@
 [Learn more](https://misskey-hub.net/)
 
 ---
-
-<a href="https://misskey-hub.net/servers/">
-		<img src="https://custom-icon-badges.herokuapp.com/badge/find_an-instance-acea31?logoColor=acea31&style=for-the-badge&logo=misskey&labelColor=363B40" alt="find an instance"/></a>
-
-<a href="https://misskey-hub.net/docs/for-admin/install/guides/">
-		<img src="https://custom-icon-badges.herokuapp.com/badge/create_an-instance-FBD53C?logoColor=FBD53C&style=for-the-badge&logo=server&labelColor=363B40" alt="create an instance"/></a>
-
-<a href="./CONTRIBUTING.md">
-		<img src="https://custom-icon-badges.herokuapp.com/badge/become_a-contributor-A371F7?logoColor=A371F7&style=for-the-badge&logo=git-merge&labelColor=363B40" alt="become a contributor"/></a>
-
-<a href="https://discord.gg/Wp8gVStHW3">
-		<img src="https://custom-icon-badges.herokuapp.com/badge/join_the-community-5865F2?logoColor=5865F2&style=for-the-badge&logo=discord&labelColor=363B40" alt="join the community"/></a>
-
-<a href="https://www.patreon.com/syuilo">
-		<img src="https://custom-icon-badges.herokuapp.com/badge/become_a-patron-F96854?logoColor=F96854&style=for-the-badge&logo=patreon&labelColor=363B40" alt="become a patron"/></a>
-
 </div>
 
-## Thanks
+# これは何？
+[しゃふすきー](https://shahu.ski)で使われている[Misskey](https://github.com/misskey-dev/misskey)のフォークです。  
+  
+## 独自機能
+- ノートを一定期間で自動消去する「すぐ消す」機能　不明, https://github.com/team-shahu/misskey/pull/32
+- チャンネル内お知らせ機能 https://github.com/team-shahu/misskey/pull/2
+- 他インスタンスの絵文字でもローカルに存在すればリアクションできるように
+- フォローリクエストを自動的に拒否する機能
+- 絵文字のクリックメニューに「絵文字ピッカーに追加」を追加
+- 投稿フォームのツールバーを任意にカスタマイズできるように
+- 下書き機能
+- 同じ音源が短時間で重複して流れないように
+- 通知にフォロバボタンを表示 https://github.com/team-shahu/misskey/pull/5
+- 二要素認証のバックアップコードを保存するように促すダイアログを表示するように
+- カスタムフォント機能
+- 絵文字を登録したユーザーがアカウントを消去しても継続して絵文字の使用ができるように https://github.com/team-shahu/misskey/pull/11
+- アバターデコレーションを登録したユーザーがアカウントを消去しても継続して使用ができるように
+- アバターデコレーションをmisskeyUI上から登録できるように https://github.com/team-shahu/misskey/pull/12
+- TL上のサーバー情報をアイコン表示に切り替えられるように https://github.com/team-shahu/misskey/pull/13 https://github.com/team-shahu/misskey/pull/24
+- 特定のロールにのみお知らせを発行する機能 https://github.com/team-shahu/misskey/pull/18 https://github.com/team-shahu/misskey/pull/54 https://github.com/team-shahu/misskey/pull/58
+- リアクションした人一覧がブロック・ミュートを考慮するようにする設定 https://github.com/team-shahu/misskey/pull/23 https://github.com/team-shahu/misskey/pull/27
+- 誰がリアクションをしたのかを非表示にできる機能 https://github.com/hideki0403/kakurega.app/commit/65d85bb4fe724dc0737f1ac7958bc13c96cc926d
+- 誰がリアクションをしたのかを非表示にできる機能 https://github.com/team-shahu/misskey/pull/35 (https://github.com/team-shahu/misskey/commit/5b2923c8127336d7fd2ee39c76d16f8a30d1b9e1)
+- 任意のTLを非表示にできるように https://github.com/team-shahu/misskey/pull/36
+- プロフィールからアクティビティとファイルを隠せるようにする https://github.com/team-shahu/misskey/pull/37
+- フォローしているユーザーなら鍵ノートでもアンテナにひっかかるように https://github.com/team-shahu/misskey/pull/38
+- nyaizeを無効化できるように https://github.com/team-shahu/misskey/pull/39
+- 新着ノート通知があった時まとめるように https://github.com/team-shahu/misskey/pull/40
+- いいねボタンの実装 https://github.com/team-shahu/misskey/pull/41 https://github.com/team-shahu/misskey/pull/44 https://github.com/team-shahu/misskey/pull/45
+- 独自機能ページの追加 https://github.com/team-shahu/misskey/pull/42
+- 予約投稿機能 https://github.com/team-shahu/misskey/pull/46 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/51
+- フォロー/フォロリクの履歴 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/50 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/53
+- ドライブから削除したファイルをオブジェクトストレージからも葬るように https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/52
+- えもえもローディング画面 https://github.com/team-shahu/misskey/pull/55
+- セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63
+- ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59
+- 絵文字ライセンスをAPに追加 https://github.com/team-shahu/misskey/pull/64
+## Special Thanks
+- [Misskey](https://github.com/misskey-dev/misskey)  
+- [にる村](https://github.com/n1lsqn/misskey)  
+- [隠れ家](https://github.com/hideki0403/kakurega.app)  
+- [Misskey.io](https://github.com/MisskeyIO/misskey)  
 
-<a href="https://sentry.io/"><img src="https://github.com/misskey-dev/misskey/assets/4439005/98576556-222f-467a-94be-e98dbda1d852" height="30" alt="Sentry" /></a>
-
-Thanks to [Sentry](https://sentry.io/) for providing the error tracking platform that helps us catch unexpected errors.
-
-<a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" height="30" alt="Chromatic" /></a>
-
-Thanks to [Chromatic](https://www.chromatic.com/) for providing the visual testing platform that helps us review UI changes and catch visual regressions.
-
-<a href="https://about.codecov.io/for/open-source/"><img src="https://about.codecov.io/wp-content/themes/codecov/assets/brand/sentry-cobranding/logos/codecov-by-sentry-logo.svg" height="30" alt="Codecov" /></a>
-
-Thanks to [Codecov](https://about.codecov.io/for/open-source/) for providing the code coverage platform that helps us improve our test coverage.
-
-<a href="https://crowdin.com/"><img src="https://user-images.githubusercontent.com/20679825/230709597-1299a011-171a-4294-a91e-355a9b37c672.svg" height="30" alt="Crowdin" /></a>
-
-Thanks to [Crowdin](https://crowdin.com/) for providing the localization platform that helps us translate Misskey into many languages.
-
-<a href="https://hub.docker.com/"><img src="https://user-images.githubusercontent.com/20679825/230148221-f8e73a32-a49b-47c3-9029-9a15c3824f92.png" height="30" alt="Docker" /></a>
-
-Thanks to [Docker](https://hub.docker.com/) for providing the container platform that helps us run Misskey in production.

@@ -223,8 +223,12 @@ export function toast(message: string) {
 
 export function alert(props: {
 	type?: 'error' | 'info' | 'success' | 'warning' | 'waiting' | 'question';
-	title?: string;
-	text?: string;
+	title?: string | null;
+	text?: string | null;
+	switchLabel?: string | null;
+	details?: Record<string, string>;
+	okWaitInitiate?: 'dialog' | 'input' | 'switch';
+	okWaitDuration?: number;
 }): Promise<void> {
 	return new Promise(resolve => {
 		const { dispose } = popup(MkDialog, props, {
@@ -238,9 +242,13 @@ export function alert(props: {
 
 export function confirm(props: {
 	type: 'error' | 'info' | 'success' | 'warning' | 'waiting' | 'question';
-	title?: string;
-	text?: string;
+	title?: string | null;
+	text?: string | null;
+	switchLabel?: string | null;
+	details?: Record<string, string>;
 	okText?: string;
+	okWaitInitiate?: 'dialog' | 'input' | 'switch';
+	okWaitDuration?: number;
 	cancelText?: string;
 }): Promise<{ canceled: boolean }> {
 	return new Promise(resolve => {
@@ -569,6 +577,19 @@ export async function selectUser(opts: { includeSelf?: boolean; localOnly?: bool
 	});
 }
 
+export async function selectRole(opts: { admin?: boolean; } = {}): Promise<Misskey.entities.Role> {
+	return new Promise(resolve => {
+		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkRoleSelectDialog.vue')), {
+			admin: opts.admin,
+		}, {
+			ok: role => {
+				resolve(role);
+			},
+			closed: () => dispose(),
+		});
+	});
+}
+
 export async function selectDriveFile(multiple: boolean): Promise<Misskey.entities.DriveFile[]> {
 	return new Promise(resolve => {
 		const { dispose } = popup(defineAsyncComponent(() => import('@/components/MkDriveSelectDialog.vue')), {
@@ -731,3 +752,4 @@ export function checkExistence(fileData: ArrayBuffer): Promise<any> {
 		});
 	});
 }*/
+
