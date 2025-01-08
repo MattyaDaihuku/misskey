@@ -405,6 +405,18 @@ function initialize() {
 		}
 	}
 
+	// #region semi-public note
+	// セミパブリックノートへのリプライは元の公開範囲を引き継ぐ
+	if (reply.value && reply.value.dontShowOnLtl === true) {
+		visibility.value = 'public_non_ltl';
+	}
+
+	// 自身のセミパブリックノートへのリプライである場合かつパブリック投稿へのリプライでセミパブリック投稿にする
+	if (reply.value && reply.value.visibility === 'public' && reply.value.reply?.userId === $i.id && reply.value.reply?.dontShowOnLtl === true) {
+		visibility.value = 'public_non_ltl';
+	}
+	// #endregion
+
 	if (props.specified) {
 		visibility.value = 'specified';
 		pushVisibleUser(props.specified);
