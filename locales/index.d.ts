@@ -7153,6 +7153,10 @@ export interface Locale extends ILocale {
              * 予約投稿の最大数
              */
             "scheduleNoteMax": string;
+            /**
+             * フォロー/フォロリク履歴の閲覧
+             */
+            "canReadFollowHistory": string;
         };
         "_condition": {
             /**
@@ -9722,6 +9726,10 @@ export interface Locale extends ILocale {
              * ログイン
              */
             "login": string;
+            /**
+             * ログインに失敗
+             */
+            "loginFailed": string;
             /**
              * 通知のテスト
              */

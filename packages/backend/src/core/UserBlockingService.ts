@@ -20,6 +20,7 @@ import { UserWebhookService } from '@/core/UserWebhookService.js';
 import { bindThis } from '@/decorators.js';
 import { CacheService } from '@/core/CacheService.js';
 import { UserFollowingService } from '@/core/UserFollowingService.js';
+import { RoleService } from '@/core/RoleService.js';
 
 @Injectable()
 export class UserBlockingService implements OnModuleInit {
@@ -52,6 +53,7 @@ export class UserBlockingService implements OnModuleInit {
 		private webhookService: UserWebhookService,
 		private apRendererService: ApRendererService,
 		private loggerService: LoggerService,
+		private roleService: RoleService,
 	) {
 		this.logger = this.loggerService.getLogger('user-block');
 	}
@@ -93,24 +95,27 @@ export class UserBlockingService implements OnModuleInit {
 			this.queueService.deliver(blocker, content, blockee.inbox, false);
 		}
 
+		const blockerPolicies = await this.roleService.getUserPolicies(blocker.id);
+		const blockeePolicies = await this.roleService.getUserPolicies(blockee.id);
+
 		// フォロー履歴に「blocked」を保存
-		if (this.userEntityService.isLocalUser(blocker)) {
+		if (this.userEntityService.isLocalUser(blocker) && blockerPolicies.canReadFollowHistory) {
 			await this.followHistoryRepository.insert({
 				id: this.idService.gen(),
-				type: 'blocked', // ブロックした側の履歴
-				fromUserId: blocker.id, // ブロックした側のID
-				toUserId: blockee.id, // ブロックされた側のID
+				type: 'blocked',
+				fromUserId: blocker.id,
+				toUserId: blockee.id,
 				timestamp: new Date(),
 			});
 		}
 
-		// フォローリクエスト履歴に「wasBlocked」を保存
-		if (this.userEntityService.isLocalUser(blockee)) {
+		// フォロー履歴に「wasBlocked」を保存
+		if (this.userEntityService.isLocalUser(blockee) && blockeePolicies.canReadFollowHistory) {
 			await this.followHistoryRepository.insert({
 				id: this.idService.gen(),
-				type: 'wasBlocked', // ブロックされた側の履歴
-				fromUserId: blocker.id, // ブロックされた側のID
-				toUserId: blockee.id, // ブロックした側のID
+				type: 'wasBlocked',
+				fromUserId: blocker.id,
+				toUserId: blockee.id,
 				timestamp: new Date(),
 			});
 		}
@@ -213,24 +218,27 @@ export class UserBlockingService implements OnModuleInit {
 			this.queueService.deliver(blocker, content, blockee.inbox, false);
 		}
 
+		const blockerPolicies = await this.roleService.getUserPolicies(blocker.id);
+		const blockeePolicies = await this.roleService.getUserPolicies(blockee.id);
+
 		// フォロー履歴に「unBlocked」を保存
-		if (this.userEntityService.isLocalUser(blocker)) {
+		if (this.userEntityService.isLocalUser(blocker) && blockerPolicies.canReadFollowHistory) {
 			await this.followHistoryRepository.insert({
 				id: this.idService.gen(),
-				type: 'unBlocked', // アンブロックした側の履歴
-				fromUserId: blocker.id, // アンブロックした側のID
-				toUserId: blockee.id, // アンブロックされた側のID
+				type: 'unBlocked',
+				fromUserId: blocker.id,
+				toUserId: blockee.id,
 				timestamp: new Date(),
 			});
 		}
 
-		// フォローリクエスト履歴に「wasUnBlocked」を保存
-		if (this.userEntityService.isLocalUser(blockee)) {
+		// フォロー履歴に「wasUnBlocked」を保存
+		if (this.userEntityService.isLocalUser(blockee) && blockeePolicies.canReadFollowHistory) {
 			await this.followHistoryRepository.insert({
 				id: this.idService.gen(),
-				type: 'wasUnBlocked', // アンブロックされた側の履歴
-				fromUserId: blocker.id, // アンブロックされた側のID
-				toUserId: blockee.id, // アンブロックした側のID
+				type: 'wasUnBlocked',
+				fromUserId: blocker.id,
+				toUserId: blockee.id,
 				timestamp: new Date(),
 			});
 		}
