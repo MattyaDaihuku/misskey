@@ -2489,6 +2489,7 @@ _notification:
     achievementEarned: "Achievement unlocked"
     exportCompleted: "The export has been completed"
     login: "Sign In"
+    loginFailed: "Sign In Failed"
     test: "Notification test"
     app: "Notifications from linked apps"
   _actions:
