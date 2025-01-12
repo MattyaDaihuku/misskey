@@ -44,7 +44,7 @@
 - フォロー/フォロリクの履歴 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/50 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/53
 - ドライブから削除したファイルをオブジェクトストレージからも葬るように https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/52
 - えもえもローディング画面 https://github.com/team-shahu/misskey/pull/55
-- セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63
+- セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63 https://github.com/team-shahu/misskey/pull/66
 - ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59
 - 絵文字ライセンスをAPに追加 https://github.com/team-shahu/misskey/pull/64
 ## Special Thanks
