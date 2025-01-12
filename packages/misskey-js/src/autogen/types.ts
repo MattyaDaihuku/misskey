@@ -4405,15 +4405,15 @@ export type components = {
       createdAt: string;
       /** @enum {string} */
       type: 'login';
-      ip: string;
     } | {
       /** Format: id */
       id: string;
+      /** Format: ip */
+      ip: string;
       /** Format: date-time */
       createdAt: string;
       /** @enum {string} */
       type: 'loginFailed';
-      ip: string;
     } | ({
       /** Format: id */
       id: string;
