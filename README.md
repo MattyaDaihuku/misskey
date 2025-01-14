@@ -41,11 +41,11 @@
 - いいねボタンの実装 https://github.com/team-shahu/misskey/pull/41 https://github.com/team-shahu/misskey/pull/44 https://github.com/team-shahu/misskey/pull/45
 - 独自機能ページの追加 https://github.com/team-shahu/misskey/pull/42
 - 予約投稿機能 https://github.com/team-shahu/misskey/pull/46 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/51
-- フォロー/フォロリクの履歴 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/50 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/53
+- フォロー/フォロリクの履歴 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/50 https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/53 https://github.com/team-shahu/misskey/pull/65
 - ドライブから削除したファイルをオブジェクトストレージからも葬るように https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/52
 - えもえもローディング画面 https://github.com/team-shahu/misskey/pull/55
 - セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63 https://github.com/team-shahu/misskey/pull/66
-- ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59
+- ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59 https://github.com/team-shahu/misskey/pull/65
 - 絵文字ライセンスをAPに追加 https://github.com/team-shahu/misskey/pull/64
 ## Special Thanks
 - [Misskey](https://github.com/misskey-dev/misskey)  
