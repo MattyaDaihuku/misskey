@@ -130,6 +130,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			const announcements = await query.limit(ps.limit).getMany();
 
+			if (announcements.length === 0) {
+				return [];
+			}
+
 			const reads = new Map<MiAnnouncement, number>();
 
 			for (const announcement of announcements) {
@@ -137,6 +141,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					announcementId: announcement.id,
 				}));
 			}
+
 			const announcementRoleIds = await this.announcementRolesRepository
 				.createQueryBuilder('announcement_role')
 				.where('announcement_role.announcementId IN (:...announcementIds)', { announcementIds: announcements.map(announcement => announcement.id) })
