@@ -47,6 +47,7 @@
 - セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63 https://github.com/team-shahu/misskey/pull/66 https://github.com/team-shahu/misskey/pull/68
 - ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59 https://github.com/team-shahu/misskey/pull/65
 - 絵文字ライセンスをAPに追加 https://github.com/team-shahu/misskey/pull/64
+- listenbrainzウィジェット https://github.com/team-shahu/misskey/pull/69
 ## Special Thanks
 - [Misskey](https://github.com/misskey-dev/misskey)  
 - [にる村](https://github.com/n1lsqn/misskey)  
