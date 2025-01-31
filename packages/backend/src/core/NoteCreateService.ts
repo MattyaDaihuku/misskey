@@ -8,6 +8,7 @@ import * as mfm from 'mfm-js';
 import { In, DataSource, IsNull, LessThan } from 'typeorm';
 import * as Redis from 'ioredis';
 import { Inject, Injectable, OnApplicationShutdown } from '@nestjs/common';
+import { Data } from 'ws';
 import { extractMentions } from '@/misc/extract-mentions.js';
 import { extractCustomEmojisFromMfm } from '@/misc/extract-custom-emojis-from-mfm.js';
 import { extractHashtags } from '@/misc/extract-hashtags.js';
@@ -55,7 +56,6 @@ import { UserBlockingService } from '@/core/UserBlockingService.js';
 import { isReply } from '@/misc/is-reply.js';
 import { trackPromise } from '@/misc/promise-tracker.js';
 import { IdentifiableError } from '@/misc/identifiable-error.js';
-import { Data } from 'ws';
 import { CollapsedQueue } from '@/misc/collapsed-queue.js';
 import { CacheService } from '@/core/CacheService.js';
 
@@ -479,7 +479,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 						expiresAt: data.poll!.expiresAt,
 						multiple: data.poll!.multiple,
 						votes: new Array(data.poll!.choices.length).fill(0),
-						noteVisibility: insert.visibility,
+						noteVisibility: insert.visibility === 'public_non_ltl' ? 'public' : insert.visibility,
 						userId: user.id,
 						userHost: user.host,
 						channelId: insert.channelId,
@@ -588,7 +588,7 @@ export class NoteCreateService implements OnApplicationShutdown {
 		if (data.deleteAt) {
 			const delay = data.deleteAt.getTime() - Date.now();
 			this.queueService.scheduledNoteDeleteQueue.add(note.id, {
-				noteId: note.id
+				noteId: note.id,
 			}, {
 				delay,
 				removeOnComplete: true,
