@@ -45,7 +45,7 @@
 - ドライブから削除したファイルをオブジェクトストレージからも葬るように https://github.com/team-shahu/misskey/pull/49 https://github.com/team-shahu/misskey/pull/52
 - えもえもローディング画面 https://github.com/team-shahu/misskey/pull/55
 - セミパブリックモードの追加 https://github.com/team-shahu/misskey/pull/57 https://github.com/team-shahu/misskey/pull/60 https://github.com/team-shahu/misskey/pull/62 https://github.com/team-shahu/misskey/pull/63 https://github.com/team-shahu/misskey/pull/66 https://github.com/team-shahu/misskey/pull/68
-- ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59 https://github.com/team-shahu/misskey/pull/65
+- ログイン通知周りの改良 https://github.com/team-shahu/misskey/pull/59 https://github.com/team-shahu/misskey/pull/65 https://github.com/team-shahu/misskey/pull/70
 - 絵文字ライセンスをAPに追加 https://github.com/team-shahu/misskey/pull/64
 - listenbrainzウィジェット https://github.com/team-shahu/misskey/pull/69
 ## Special Thanks

@@ -9692,8 +9692,8 @@ export interface Locale extends ILocale {
          */
         "login": string;
         /**
-         * {ip}でログインされました。
-         * 承認されていない機器であれば、セキュリティのために「{text}」を通じてすべての機器でログアウトを行ってください。
+         * {ip}からログインされました。
+         * 心当たりがない場合、設定の「{text}」からすべての機器をログアウトしてください。
          */
         "loginDescription": ParameterizedString<"ip" | "text">;
         /**
@@ -9702,7 +9702,7 @@ export interface Locale extends ILocale {
         "loginFailed": string;
         /**
          * {ip}からのログインに失敗しました。
-         * 自身のip以外でのログインが行われている場合、セキュリティのために設定にてパスワードを変更してください。
+         * 心当たりがない場合はパスワードの変更を行ってください。
          */
         "loginFailedDescription": ParameterizedString<"ip">;
         "_types": {
