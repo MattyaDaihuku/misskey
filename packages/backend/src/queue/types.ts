@@ -109,6 +109,11 @@ export type EndedPollNotificationJobData = {
 	noteId: MiNote['id'];
 };
 
+
+export type ScheduledNoteDeleteJobData = {
+	noteId: MiNote['id'];
+}
+
 export type SystemWebhookDeliverJobData<T extends SystemWebhookEventType = SystemWebhookEventType> = {
 	type: T;
 	content: SystemWebhookPayload<T>;
@@ -133,3 +138,7 @@ export type UserWebhookDeliverJobData<T extends WebhookEventTypes = WebhookEvent
 export type ThinUser = {
 	id: MiUser['id'];
 };
+
+export type ScheduleNotePostJobData = {
+	scheduleNoteId: MiNote['id'];
+}

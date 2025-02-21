@@ -224,8 +224,12 @@ export function toast(message: string) {
 
 export function alert(props: {
 	type?: 'error' | 'info' | 'success' | 'warning' | 'waiting' | 'question';
-	title?: string;
-	text?: string;
+	title?: string | null;
+	text?: string | null;
+	switchLabel?: string | null;
+	details?: Record<string, string>;
+	okWaitInitiate?: 'dialog' | 'input' | 'switch';
+	okWaitDuration?: number;
 }): Promise<void> {
 	return new Promise(resolve => {
 		const { dispose } = popup(MkDialog, props, {
@@ -239,9 +243,13 @@ export function alert(props: {
 
 export function confirm(props: {
 	type: 'error' | 'info' | 'success' | 'warning' | 'waiting' | 'question';
-	title?: string;
-	text?: string;
+	title?: string | null;
+	text?: string | null;
+	switchLabel?: string | null;
+	details?: Record<string, string>;
 	okText?: string;
+	okWaitInitiate?: 'dialog' | 'input' | 'switch';
+	okWaitDuration?: number;
 	cancelText?: string;
 }): Promise<{ canceled: boolean }> {
 	return new Promise(resolve => {
@@ -753,3 +761,4 @@ export function checkExistence(fileData: ArrayBuffer): Promise<any> {
 		});
 	});
 }*/
+

@@ -207,6 +207,8 @@ export * as 'following/requests/accept' from './endpoints/following/requests/acc
 export * as 'following/requests/cancel' from './endpoints/following/requests/cancel.js';
 export * as 'following/requests/list' from './endpoints/following/requests/list.js';
 export * as 'following/requests/reject' from './endpoints/following/requests/reject.js';
+export * as 'following/history' from './endpoints/following/history.js';
+export * as 'following/requests/history' from './endpoints/following/requests/history.js';
 export * as 'following/requests/sent' from './endpoints/following/requests/sent.js';
 export * as 'following/update' from './endpoints/following/update.js';
 export * as 'following/update-all' from './endpoints/following/update-all.js';
@@ -314,6 +316,9 @@ export * as 'notes/reactions/create' from './endpoints/notes/reactions/create.js
 export * as 'notes/reactions/delete' from './endpoints/notes/reactions/delete.js';
 export * as 'notes/renotes' from './endpoints/notes/renotes.js';
 export * as 'notes/replies' from './endpoints/notes/replies.js';
+export * as 'notes/schedule/create' from './endpoints/notes/schedule/create.js';
+export * as 'notes/schedule/delete' from './endpoints/notes/schedule/delete.js';
+export * as 'notes/schedule/list' from './endpoints/notes/schedule/list.js';
 export * as 'notes/search' from './endpoints/notes/search.js';
 export * as 'notes/search-by-tag' from './endpoints/notes/search-by-tag.js';
 export * as 'notes/show' from './endpoints/notes/show.js';

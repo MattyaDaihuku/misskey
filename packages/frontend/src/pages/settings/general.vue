@@ -29,6 +29,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		<div class="_gaps_s">
 			<MkSwitch v-model="showFixedPostForm">{{ i18n.ts.showFixedPostForm }}</MkSwitch>
 			<MkSwitch v-model="showFixedPostFormInChannel">{{ i18n.ts.showFixedPostFormInChannel }}</MkSwitch>
+			<FormLink to="/settings/post-form">{{ i18n.ts.postForm }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></FormLink>
 			<MkFolder>
 				<template #label>{{ i18n.ts.pinnedList }}</template>
 				<!-- 複数ピン止め管理できるようにしたいけどめんどいので一旦ひとつのみ -->
@@ -37,7 +38,6 @@ SPDX-License-Identifier: AGPL-3.0-only
 			</MkFolder>
 		</div>
 	</FormSection>
-
 	<FormSection>
 		<template #label>{{ i18n.ts.displayOfNote }}</template>
 
@@ -62,6 +62,18 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<option value="large">{{ i18n.ts.large }}</option>
 				</MkRadios>
 				<MkSwitch v-model="limitWidthOfReaction">{{ i18n.ts.limitWidthOfReaction }}</MkSwitch>
+				<MkSelect v-model="hideReactionCount">
+					<template #label>{{ i18n.ts.hideReactionCount }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+					<option value="none">{{ i18n.ts._hideReactionCount.none }}</option>
+					<option value="self">{{ i18n.ts._hideReactionCount.self }}</option>
+					<option value="others">{{ i18n.ts._hideReactionCount.others }}</option>
+					<option value="all">{{ i18n.ts._hideReactionCount.all }}</option>
+				</MkSelect>
+				<MkSwitch v-model="hideReactionUsers">
+					<template #caption>{{ i18n.ts.hideReactionUsersDescription }}</template>
+					{{ i18n.ts.hideReactionUsers }}
+					<span class="_beta">{{ i18n.ts.originalFeature }}</span>
+				</MkSwitch>
 			</div>
 
 			<MkSelect v-if="instance.federation !== 'none'" v-model="instanceTicker">
@@ -70,7 +82,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<option value="remote">{{ i18n.ts._instanceTicker.remote }}</option>
 				<option value="always">{{ i18n.ts._instanceTicker.always }}</option>
 			</MkSelect>
-
+			<MkSwitch v-if="instanceTicker !== 'none'" v-model="instanceIcon">{{ i18n.ts.instanceIcon }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></MkSwitch>
 			<MkSelect v-model="nsfw">
 				<template #label>{{ i18n.ts.displayOfSensitiveMedia }}</template>
 				<option value="respect">{{ i18n.ts._displayOfSensitiveMedia.respect }}</option>
@@ -85,6 +97,26 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<option value="1_1">{{ i18n.tsx.limitTo({ x: '1:1' }) }}</option>
 				<option value="2_3">{{ i18n.tsx.limitTo({ x: '2:3' }) }}</option>
 			</MkRadios>
+
+			<MkSwitch v-model="disableNoteNyaize">{{ i18n.ts.disableNoteNyaize }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></MkSwitch>
+
+			<MkFolder>
+				<template #label>{{ i18n.ts.like }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+				<div class="_gaps_m">
+					<MkSwitch v-model="showLikeButton">{{ i18n.ts.showLikeButton }}</MkSwitch>
+
+					<FromSlot v-model="selectReaction">
+						<template #label>{{ i18n.ts.selectReaction }}</template>
+						<MkCustomEmoji v-if="selectReaction && selectReaction.startsWith(':')" style="max-height: 3em; font-size: 1.1em;" :useOriginalSize="false" :name="selectReaction" :normal="true" :noStyle="true"/>
+						<MkEmoji v-else-if="selectReaction && !selectReaction.startsWith(':')" :emoji="selectReaction" style="max-height: 3em; font-size: 1.1em;" :normal="true" :noStyle="true"/>
+						<span v-else-if="!selectReaction">{{ i18n.ts.notSet }}</span>
+						<div class="_buttons" style="padding-top: 8px;">
+							<MkButton rounded :small="true" inline @click="chooseNewReaction"><i class="ti ti-mood-happy"></i> Change</MkButton>
+							<MkButton rounded :small="true" inline @click="resetReaction"><i class="ti ti-reload"></i> Reset</MkButton>
+						</div>
+					</FromSlot>
+				</div>
+			</MkFolder>
 		</div>
 	</FormSection>
 
@@ -147,6 +179,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<div style="margin: 8px 0 0 0; font-size: 1.5em;"><Mfm :key="emojiStyle" text="🍮🍦🍭🍩🍰🍫🍬🥞🍪"/></div>
 			</div>
 
+			<MkSelect v-model="customFont">
+				<template #label>{{ i18n.ts.customFont }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+				<option :value="null">{{ i18n.ts.default }}</option>
+				<option v-for="[name, font] of Object.entries(fontList)" :value="name">{{ font.name }}</option>
+			</MkSelect>
+
 			<MkRadios v-model="fontSize">
 				<template #label>{{ i18n.ts.fontSize }}</template>
 				<option :value="null"><span style="font-size: 14px;">Aa</span></option>
@@ -170,6 +208,11 @@ SPDX-License-Identifier: AGPL-3.0-only
 				<MkSwitch v-model="enableHorizontalSwipe">{{ i18n.ts.enableHorizontalSwipe }}</MkSwitch>
 				<MkSwitch v-model="alwaysConfirmFollow">{{ i18n.ts.alwaysConfirmFollow }}</MkSwitch>
 				<MkSwitch v-model="confirmWhenRevealingSensitiveMedia">{{ i18n.ts.confirmWhenRevealingSensitiveMedia }}</MkSwitch>
+
+				<MkSwitch v-model="reactionChecksMuting">
+					{{ i18n.ts._reactionChecksMuting.title }}<span class="_beta">{{ i18n.ts.originalFeature }}</span>
+					<template #caption>{{ i18n.ts._reactionChecksMuting.caption }}</template>
+				</MkSwitch>
 			</div>
 			<MkSelect v-model="serverDisconnectedBehavior">
 				<template #label>{{ i18n.ts.whenServerDisconnected }}</template>
@@ -222,6 +265,41 @@ SPDX-License-Identifier: AGPL-3.0-only
 	</FormSection>
 
 	<FormSection>
+		<div class="_gaps_m">
+			<MkFolder>
+				<template #label>{{ i18n.ts._profileHiddenSettings.hiddenProfile }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+				<div class="_gaps_m">
+					<div class="_buttons">
+						<MkButton inline @click="enableAllHidden">{{ i18n.ts.enableAll }}</MkButton>
+						<MkButton inline @click="disableAllHidden">{{ i18n.ts.disableAll }}</MkButton>
+					</div>
+					<MkSwitch v-model="hiddenPinnedNotes">
+						<template #caption>{{ i18n.ts._profileHiddenSettings.hiddenPinnedNotesDescription }}</template>
+						{{ i18n.ts._profileHiddenSettings.hiddenPinnedNotes }}
+					</MkSwitch>
+					<MkSwitch v-model="hiddenActivity">
+						<template #caption>{{ i18n.ts._profileHiddenSettings.hiddenActivityDescription }}</template>
+						{{ i18n.ts._profileHiddenSettings.hiddenActivity }}
+					</MkSwitch>
+					<MkSwitch v-model="hiddenFiles">
+						<template #caption>{{ i18n.ts._profileHiddenSettings.hiddenFilesDescription }}</template>
+						{{ i18n.ts._profileHiddenSettings.hiddenFiles }}
+					</MkSwitch>
+				</div>
+			</MkFolder>
+
+			<MkFolder>
+				<template #label>{{ i18n.ts.timeline }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+				<div class="_gaps_m">
+					<MkSwitch v-model="hideLocalTimeLine">{{ i18n.ts.hideLocalTimeLine }}</MkSwitch>
+					<MkSwitch v-model="hideSocialTimeLine">{{ i18n.ts.hideSocialTimeLine }}</MkSwitch>
+					<MkSwitch v-model="hideGlobalTimeLine">{{ i18n.ts.hideGlobalTimeLine }}</MkSwitch>
+				</div>
+			</MkFolder>
+		</div>
+	</FormSection>
+
+	<FormSection>
 		<template #label>{{ i18n.ts.other }}</template>
 
 		<div class="_gaps">
@@ -261,6 +339,9 @@ import FormSection from '@/components/form/section.vue';
 import FormLink from '@/components/form/link.vue';
 import MkLink from '@/components/MkLink.vue';
 import MkInfo from '@/components/MkInfo.vue';
+import FromSlot from '@/components/form/slot.vue';
+import MkCustomEmoji from '@/components/global/MkCustomEmoji.vue';
+import MkEmoji from '@/components/global/MkEmoji.vue';
 import { defaultStore } from '@/store.js';
 import * as os from '@/os.js';
 import { instance } from '@/instance.js';
@@ -268,6 +349,7 @@ import { misskeyApi } from '@/scripts/misskey-api.js';
 import { reloadAsk } from '@/scripts/reload-ask.js';
 import { i18n } from '@/i18n.js';
 import { definePageMetadata } from '@/scripts/page-metadata.js';
+import { fontList } from '@/scripts/font';
 import { miLocalStorage } from '@/local-storage.js';
 import { globalEvents } from '@/events.js';
 import { claimAchievement } from '@/scripts/achievements.js';
@@ -284,6 +366,8 @@ const showNoteActionsOnlyHover = computed(defaultStore.makeGetterSetter('showNot
 const showClipButtonInNoteFooter = computed(defaultStore.makeGetterSetter('showClipButtonInNoteFooter'));
 const reactionsDisplaySize = computed(defaultStore.makeGetterSetter('reactionsDisplaySize'));
 const limitWidthOfReaction = computed(defaultStore.makeGetterSetter('limitWidthOfReaction'));
+const hideReactionCount = computed(defaultStore.makeGetterSetter('hideReactionCount'));
+const hideReactionUsers = computed(defaultStore.makeGetterSetter('hideReactionUsers'));
 const collapseRenotes = computed(defaultStore.makeGetterSetter('collapseRenotes'));
 const reduceAnimation = computed(defaultStore.makeGetterSetter('animation', v => !v, v => !v));
 const useBlurEffectForModal = computed(defaultStore.makeGetterSetter('useBlurEffectForModal'));
@@ -295,7 +379,11 @@ const showReactionsCount = computed(defaultStore.makeGetterSetter('showReactions
 const enableQuickAddMfmFunction = computed(defaultStore.makeGetterSetter('enableQuickAddMfmFunction'));
 const emojiStyle = computed(defaultStore.makeGetterSetter('emojiStyle'));
 const menuStyle = computed(defaultStore.makeGetterSetter('menuStyle'));
+const customFont = computed(defaultStore.makeGetterSetter('customFont'));
 const disableShowingAnimatedImages = computed(defaultStore.makeGetterSetter('disableShowingAnimatedImages'));
+const hiddenPinnedNotes = computed(defaultStore.makeGetterSetter('hiddenPinnedNotes'));
+const hiddenActivity = computed(defaultStore.makeGetterSetter('hiddenActivity'));
+const hiddenFiles = computed(defaultStore.makeGetterSetter('hiddenFiles'));
 const forceShowAds = computed(defaultStore.makeGetterSetter('forceShowAds'));
 const loadRawImages = computed(defaultStore.makeGetterSetter('loadRawImages'));
 const highlightSensitiveMedia = computed(defaultStore.makeGetterSetter('highlightSensitiveMedia'));
@@ -305,6 +393,7 @@ const showFixedPostForm = computed(defaultStore.makeGetterSetter('showFixedPostF
 const showFixedPostFormInChannel = computed(defaultStore.makeGetterSetter('showFixedPostFormInChannel'));
 const numberOfPageCache = computed(defaultStore.makeGetterSetter('numberOfPageCache'));
 const instanceTicker = computed(defaultStore.makeGetterSetter('instanceTicker'));
+const instanceIcon = computed(defaultStore.makeGetterSetter('instanceIcon'));
 const enableInfiniteScroll = computed(defaultStore.makeGetterSetter('enableInfiniteScroll'));
 const useReactionPickerForContextMenu = computed(defaultStore.makeGetterSetter('useReactionPickerForContextMenu'));
 const squareAvatars = computed(defaultStore.makeGetterSetter('squareAvatars'));
@@ -316,11 +405,18 @@ const keepScreenOn = computed(defaultStore.makeGetterSetter('keepScreenOn'));
 const disableStreamingTimeline = computed(defaultStore.makeGetterSetter('disableStreamingTimeline'));
 const useGroupedNotifications = computed(defaultStore.makeGetterSetter('useGroupedNotifications'));
 const enableSeasonalScreenEffect = computed(defaultStore.makeGetterSetter('enableSeasonalScreenEffect'));
+const disableNoteNyaize = computed(defaultStore.makeGetterSetter('disableNoteNyaize'));
 const enableHorizontalSwipe = computed(defaultStore.makeGetterSetter('enableHorizontalSwipe'));
 const useNativeUIForVideoAudioPlayer = computed(defaultStore.makeGetterSetter('useNativeUIForVideoAudioPlayer'));
 const alwaysConfirmFollow = computed(defaultStore.makeGetterSetter('alwaysConfirmFollow'));
 const confirmWhenRevealingSensitiveMedia = computed(defaultStore.makeGetterSetter('confirmWhenRevealingSensitiveMedia'));
 const contextMenu = computed(defaultStore.makeGetterSetter('contextMenu'));
+const reactionChecksMuting = computed(defaultStore.makeGetterSetter('reactionChecksMuting'));
+const hideLocalTimeLine = computed(defaultStore.makeGetterSetter('hideLocalTimeLine'));
+const hideGlobalTimeLine = computed(defaultStore.makeGetterSetter('hideGlobalTimeLine'));
+const hideSocialTimeLine = computed(defaultStore.makeGetterSetter('hideSocialTimeLine'));
+const selectReaction = computed(defaultStore.makeGetterSetter('selectReaction'));
+const showLikeButton = computed(defaultStore.makeGetterSetter('showLikeButton'));
 
 watch(lang, () => {
 	miLocalStorage.setItem('lang', lang.value as string);
@@ -354,6 +450,8 @@ watch([
 	showNoteActionsOnlyHover,
 	showGapBetweenNotesInTimeline,
 	instanceTicker,
+	hideReactionCount,
+	instanceIcon,
 	overridedDeviceKind,
 	mediaListWithOneImageAppearance,
 	reactionsDisplaySize,
@@ -365,9 +463,33 @@ watch([
 	alwaysConfirmFollow,
 	confirmWhenRevealingSensitiveMedia,
 	contextMenu,
+	hiddenPinnedNotes,
+	hiddenActivity,
+	hiddenFiles,
+	selectReaction,
+	showLikeButton,
 ], async () => {
 	await reloadAsk({ reason: i18n.ts.reloadToApplySetting, unison: true });
 });
+
+function chooseNewReaction(ev: MouseEvent) {
+	os.pickEmoji(getHTMLElement(ev), {
+		showPinned: false,
+	}).then(async (emoji) => {
+		selectReaction.value = emoji as string; // 選択された絵文字を格納
+		await reloadAsk(); // 必要ならリロードや更新処理
+	});
+}
+
+function resetReaction() {
+	selectReaction.value = ''; // `selectReaction` をリセット
+	reloadAsk(); // 必要ならリロードや更新処理
+}
+
+function getHTMLElement(ev: MouseEvent): HTMLElement {
+	const target = ev.currentTarget ?? ev.target;
+	return target as HTMLElement; // イベント発生元の HTML 要素を取得
+}
 
 const emojiIndexLangs = ['en-US', 'ja-JP', 'ja-JP_hira'] as const;
 
@@ -465,6 +587,18 @@ function enableAllDataSaver() {
 	dataSaver.value = g;
 }
 
+function enableAllHidden() {
+	defaultStore.set('hiddenPinnedNotes', true);
+	defaultStore.set('hiddenActivity', true);
+	defaultStore.set('hiddenFiles', true);
+}
+
+function disableAllHidden() {
+	defaultStore.set('hiddenPinnedNotes', false);
+	defaultStore.set('hiddenActivity', false);
+	defaultStore.set('hiddenFiles', false);
+}
+
 function disableAllDataSaver() {
 	const g = { ...defaultStore.state.dataSaver };
 
@@ -488,3 +622,10 @@ definePageMetadata(() => ({
 	icon: 'ti ti-adjustments',
 }));
 </script>
+
+<!-- <style lang="scss" module>
+.emojisAdd {
+  display: inline-block;
+  padding: 8px;
+}
+</style> -->

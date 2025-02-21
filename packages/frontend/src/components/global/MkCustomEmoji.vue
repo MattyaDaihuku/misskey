@@ -54,6 +54,7 @@ const react = inject<((name: string) => void) | null>('react', null);
 
 const customEmojiName = computed(() => (props.name[0] === ':' ? props.name.substring(1, props.name.length - 1) : props.name).replace('@.', ''));
 const isLocal = computed(() => !props.host && (customEmojiName.value.endsWith('@.') || !customEmojiName.value.includes('@')));
+const canReact = computed(() => isLocal.value || customEmojisMap.has(customEmojiName.value));
 
 const rawUrl = computed(() => {
 	if (props.url) {
@@ -86,7 +87,7 @@ const alt = computed(() => `:${customEmojiName.value}:`);
 const errored = ref(url.value == null);
 
 function onClick(ev: MouseEvent) {
-	if (props.menu) {
+	if (props.menu && canReact.value) {
 		const menuItems: MenuItem[] = [];
 
 		menuItems.push({
@@ -108,6 +109,16 @@ function onClick(ev: MouseEvent) {
 				action: () => {
 					react(`:${props.name}:`);
 					sound.playMisskeySfx('reaction');
+				},
+			});
+		}
+
+		if ( !defaultStore.state.reactions.includes(`:${props.name}:`) ) {
+			menuItems.push({
+				text: i18n.ts.addToEmojiPicker,
+				icon: 'ti ti-plus',
+				action: () => {
+					defaultStore.set('reactions', [...defaultStore.state.reactions, `:${props.name}:`]);
 				},
 			});
 		}

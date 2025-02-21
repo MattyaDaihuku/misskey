@@ -109,6 +109,10 @@ const routes: RouteDef[] = [{
 		name: 'navbar',
 		component: page(() => import('@/pages/settings/navbar.vue')),
 	}, {
+		path: '/post-form',
+		name: 'post-form',
+		component: page(() => import('@/pages/settings/post-form.vue')),
+	}, {
 		path: '/statusbar',
 		name: 'statusbar',
 		component: page(() => import('@/pages/settings/statusbar.vue')),
@@ -176,6 +180,10 @@ const routes: RouteDef[] = [{
 		path: '/other',
 		name: 'other',
 		component: page(() => import('@/pages/settings/other.vue')),
+	}, {
+		path: '/shahu-settings',
+		name: 'shahu-settings',
+		component: page(() => import('@/pages/settings/shahu-settings.vue')),
 	}, {
 		path: '/',
 		component: page(() => import('@/pages/_empty_.vue')),
@@ -518,6 +526,14 @@ const routes: RouteDef[] = [{
 }, {
 	path: '/my/follow-requests',
 	component: page(() => import('@/pages/follow-requests.vue')),
+	loginRequired: true,
+}, {
+	path: '/my/follow-requests-history',
+	component: page(() => import('@/pages/follow-requests-history.vue')),
+	loginRequired: true,
+}, {
+	path: '/my/follow-history',
+	component: page(() => import('@/pages/follow-history.vue')),
 	loginRequired: true,
 }, {
 	path: '/my/lists/:listId',

@@ -18,6 +18,9 @@
  * achievementEarned - 実績を獲得
  * exportCompleted - エクスポートが完了
  * login - ログイン
+ * loginFailed - ログインに失敗
+ * scheduledNoteFailed - 予約投稿に失敗
+ * scheduledNotePosted - 予約投稿をノート
  * app - アプリ通知
  * test - テスト通知（サーバー側）
  */
@@ -36,6 +39,9 @@ export const notificationTypes = [
 	'achievementEarned',
 	'exportCompleted',
 	'login',
+	'loginFailed',
+	'scheduledNoteFailed',
+	'scheduledNotePosted',
 	'app',
 	'test',
 ] as const;
@@ -44,11 +50,12 @@ export const groupedNotificationTypes = [
 	...notificationTypes,
 	'reaction:grouped',
 	'renote:grouped',
+	'note:grouped',
 ] as const;
 
 export const obsoleteNotificationTypes = ['pollVote', 'groupInvited'] as const;
 
-export const noteVisibilities = ['public', 'home', 'followers', 'specified'] as const;
+export const noteVisibilities = ['public', 'public_non_ltl', 'home', 'followers', 'specified'] as const;
 
 export const mutedNoteReasons = ['word', 'manual', 'spam', 'other'] as const;
 
@@ -88,10 +95,13 @@ export const moderationLogTypes = [
 	'deleteNote',
 	'createGlobalAnnouncement',
 	'createUserAnnouncement',
+	'createRolesAnnouncement',
 	'updateGlobalAnnouncement',
 	'updateUserAnnouncement',
+	'updateRolesAnnouncement',
 	'deleteGlobalAnnouncement',
 	'deleteUserAnnouncement',
+	'deleteRolesAnnouncement',
 	'resetPassword',
 	'suspendRemoteInstance',
 	'unsuspendRemoteInstance',
@@ -211,6 +221,12 @@ export type ModerationLogPayloads = {
 		userUsername: string;
 		userHost: string | null;
 	};
+	createRolesAnnouncement: {
+		announcementId: string;
+		announcement: any;
+		roleIds: string[];
+		roles: any[];
+	};
 	updateGlobalAnnouncement: {
 		announcementId: string;
 		before: any;
@@ -224,6 +240,13 @@ export type ModerationLogPayloads = {
 		userUsername: string;
 		userHost: string | null;
 	};
+	updateRolesAnnouncement: {
+		announcementId: string;
+		before: any;
+		after: any;
+		roleIds: string[];
+		roles: any[];
+	};
 	deleteGlobalAnnouncement: {
 		announcementId: string;
 		announcement: any;
@@ -234,6 +257,12 @@ export type ModerationLogPayloads = {
 		userId: string;
 		userUsername: string;
 		userHost: string | null;
+	};
+	deleteRolesAnnouncement: {
+		announcementId: string;
+		announcement: any;
+		roleIds: string[];
+		roles: any[];
 	};
 	resetPassword: {
 		userId: string;

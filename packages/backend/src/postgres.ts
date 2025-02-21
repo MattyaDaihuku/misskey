@@ -30,6 +30,8 @@ import { MiDriveFolder } from '@/models/DriveFolder.js';
 import { MiEmoji } from '@/models/Emoji.js';
 import { MiFollowing } from '@/models/Following.js';
 import { MiFollowRequest } from '@/models/FollowRequest.js';
+import { MiFollowRequestHistory } from '@/models/FollowRequestHistory.js';
+import { MiFollowHistory } from '@/models/FollowHistory.js';
 import { MiGalleryLike } from '@/models/GalleryLike.js';
 import { MiGalleryPost } from '@/models/GalleryPost.js';
 import { MiHashtag } from '@/models/Hashtag.js';
@@ -78,10 +80,12 @@ import { MiFlashLike } from '@/models/FlashLike.js';
 import { MiUserMemo } from '@/models/UserMemo.js';
 import { MiBubbleGameRecord } from '@/models/BubbleGameRecord.js';
 import { MiReversiGame } from '@/models/ReversiGame.js';
+import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 
 import { Config } from '@/config.js';
 import MisskeyLogger from '@/logger.js';
 import { bindThis } from '@/decorators.js';
+import { MiAnnouncementRole } from './models/AnnouncementRole.js';
 
 pg.types.setTypeParser(20, Number);
 
@@ -168,6 +172,7 @@ class MyCustomLogger implements Logger {
 
 export const entities = [
 	MiAnnouncement,
+	MiAnnouncementRole,
 	MiAnnouncementRead,
 	MiMeta,
 	MiInstance,
@@ -187,12 +192,15 @@ export const entities = [
 	MiUsedUsername,
 	MiFollowing,
 	MiFollowRequest,
+	MiFollowRequestHistory,
+	MiFollowHistory,
 	MiMuting,
 	MiRenoteMuting,
 	MiBlocking,
 	MiNote,
 	MiNoteFavorite,
 	MiNoteReaction,
+	MiNoteSchedule,
 	MiNoteThreadMuting,
 	MiNoteUnread,
 	MiPage,

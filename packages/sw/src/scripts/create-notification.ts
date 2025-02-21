@@ -212,6 +212,14 @@ async function composeNotification(data: PushNotificationDataMap[keyof PushNotif
 
 				case 'login':
 					return [i18n.ts._notification.login, {
+						body: i18n.tsx._notification.loginDescription({ ip: data.body.ip, text: i18n.ts.regenerateLoginToken }),
+						badge: iconUrl('login-2'),
+						data,
+					}];
+
+				case 'loginFailed':
+					return [i18n.ts._notification.loginFailed, {
+						body: i18n.tsx._notification.loginFailedDescription({ ip: data.body.ip }),
 						badge: iconUrl('login-2'),
 						data,
 					}];
@@ -252,6 +260,21 @@ async function composeNotification(data: PushNotificationDataMap[keyof PushNotif
 				case 'test':
 					return [i18n.ts._notification.testNotification, {
 						body: i18n.ts._notification.notificationWillBeDisplayedLikeThis,
+						badge: iconUrl('bell'),
+						data,
+					}];
+
+				case 'scheduledNoteFailed':
+					return [i18n.ts._notification.scheduledNoteFailed, {
+						body: data.body.reason,
+						badge: iconUrl('bell'),
+						data,
+					}];
+
+				case 'scheduledNotePosted':
+					return [i18n.ts._notification.scheduledNotePosted, {
+						body: data.body.note.text ?? '',
+						icon: data.body.user.avatarUrl ?? undefined,
 						badge: iconUrl('bell'),
 						data,
 					}];

@@ -90,6 +90,12 @@ export type MiNotification = {
 	type: 'login';
 	id: string;
 	createdAt: string;
+	userIp: string;
+} | {
+	type: 'loginFailed';
+	id: string;
+	createdAt: string;
+	userIp: string;
 } | {
 	type: 'app';
 	id: string;
@@ -120,6 +126,16 @@ export type MiNotification = {
 	type: 'test';
 	id: string;
 	createdAt: string;
+} | {
+	type: 'scheduledNoteFailed';
+	id: string;
+	createdAt: string;
+	reason: string;
+} | {
+	type: 'scheduledNotePosted';
+	id: string;
+	createdAt: string;
+	noteId: MiNote['id'];
 };
 
 export type MiGroupedNotification = MiNotification | {
@@ -137,4 +153,10 @@ export type MiGroupedNotification = MiNotification | {
 	createdAt: string;
 	noteId: MiNote['id'];
 	userIds: string[];
+} | {
+	type: 'note:grouped';
+	id: string;
+	createdAt: string;
+	noteIds: string[];
+	notifierIds: MiUser['id'][];
 };

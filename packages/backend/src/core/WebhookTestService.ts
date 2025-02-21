@@ -131,6 +131,7 @@ function generateDummyNote(override?: Partial<MiNote>): MiNote {
 		replyUserHost: null,
 		renoteUserId: null,
 		renoteUserHost: null,
+		deleteAt: null,
 		...override,
 	};
 }
@@ -147,7 +148,7 @@ function toPackedNote(note: MiNote, detail = true, override?: Packed<'Note'>): P
 		replyId: note.replyId,
 		renoteId: note.renoteId,
 		isHidden: false,
-		visibility: note.visibility,
+		visibility: note.visibility !== 'public_non_ltl' ? note.visibility : 'public',
 		mentions: note.mentions,
 		visibleUserIds: note.visibleUserIds,
 		fileIds: note.fileIds,
@@ -166,6 +167,7 @@ function toPackedNote(note: MiNote, detail = true, override?: Packed<'Note'>): P
 		repliesCount: note.repliesCount,
 		uri: note.uri ?? undefined,
 		url: note.url ?? undefined,
+		dontShowOnLtl: note.visibility === 'public_non_ltl',
 		reactionAndUserPairCache: note.reactionAndUserPairCache,
 		...(detail ? {
 			clippedCount: note.clippedCount,
