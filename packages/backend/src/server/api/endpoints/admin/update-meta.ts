@@ -141,6 +141,7 @@ export const paramDef = {
 		enableIdenticonGeneration: { type: 'boolean' },
 		serverRules: { type: 'array', items: { type: 'string' } },
 		bannedEmailDomains: { type: 'array', items: { type: 'string' } },
+		emailWhitelist: { type: 'boolean' },
 		preservedUsernames: { type: 'array', items: { type: 'string' } },
 		manifestJsonOverride: { type: 'string' },
 		enableFanoutTimeline: { type: 'boolean' },
@@ -185,6 +186,9 @@ export const paramDef = {
 				type: 'string',
 			},
 		},
+		customSplashText: { type: 'array', nullable: true, items: {
+			type: 'string',
+		} },
 	},
 	required: [],
 } as const;
@@ -448,6 +452,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			if (ps.repositoryUrl !== undefined) {
+				// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 				set.repositoryUrl = URL.canParse(ps.repositoryUrl!) ? ps.repositoryUrl : null;
 			}
 
@@ -639,6 +644,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				set.bannedEmailDomains = ps.bannedEmailDomains;
 			}
 
+			if (ps.emailWhitelist !== undefined) {
+				set.emailWhitelist = ps.emailWhitelist;
+			}
+
 			if (ps.urlPreviewEnabled !== undefined) {
 				set.urlPreviewEnabled = ps.urlPreviewEnabled;
 			}
@@ -671,6 +680,14 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			if (Array.isArray(ps.federationHosts)) {
 				set.federationHosts = ps.federationHosts.filter(Boolean).map(x => x.toLowerCase());
+			}
+
+			if (Array.isArray(ps.customSplashText)) {
+				set.customSplashText = ps.customSplashText.filter(Boolean);
+			}
+
+			if (Array.isArray(ps.customSplashText)) {
+				set.customSplashText = ps.customSplashText.filter(Boolean);
 			}
 
 			const before = await this.metaService.fetch(true);

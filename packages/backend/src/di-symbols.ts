@@ -18,6 +18,7 @@ export const DI = {
 	usersRepository: Symbol('usersRepository'),
 	notesRepository: Symbol('notesRepository'),
 	announcementsRepository: Symbol('announcementsRepository'),
+	announcementRolesRepository: Symbol('announcementRolesRepository'),
 	announcementReadsRepository: Symbol('announcementReadsRepository'),
 	appsRepository: Symbol('appsRepository'),
 	avatarDecorationsRepository: Symbol('avatarDecorationsRepository'),
@@ -40,6 +41,8 @@ export const DI = {
 	usedUsernamesRepository: Symbol('usedUsernamesRepository'),
 	followingsRepository: Symbol('followingsRepository'),
 	followRequestsRepository: Symbol('followRequestsRepository'),
+	followRequestHistoryRepository: Symbol('followRequestHistoryRepository'),
+	followHistoryRepository: Symbol('followHistoryRepository'),
 	instancesRepository: Symbol('instancesRepository'),
 	emojisRepository: Symbol('emojisRepository'),
 	driveFilesRepository: Symbol('driveFilesRepository'),
@@ -84,5 +87,6 @@ export const DI = {
 	userMemosRepository: Symbol('userMemosRepository'),
 	bubbleGameRecordsRepository: Symbol('bubbleGameRecordsRepository'),
 	reversiGamesRepository: Symbol('reversiGamesRepository'),
+	noteScheduleRepository: Symbol('noteScheduleRepository'),
 	//#endregion
 };

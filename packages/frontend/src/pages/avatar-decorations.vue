@@ -93,26 +93,26 @@ definePageMetadata(() => ({
 </script>
 
 <style lang="scss" module>
-.decorations {
-	display: grid;
-	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-	grid-gap: 12px;
-}
+	.decorations {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+		grid-gap: 12px;
+	}
 
-.decoration {
-	cursor: pointer;
-	padding: 16px 16px 28px 16px;
-	border-radius: 8px;
-	text-align: center;
-	font-size: 90%;
-	overflow: clip;
-	contain: content;
-}
+	.decoration {
+		cursor: pointer;
+		padding: 16px 16px 28px 16px;
+		border-radius: 8px;
+		text-align: center;
+		font-size: 90%;
+		overflow: clip;
+		contain: content;
+	}
 
-.decorationName {
-	position: relative;
-	z-index: 10;
-	font-weight: bold;
-	margin-bottom: 20px;
-}
+	.decorationName {
+		position: relative;
+		z-index: 10;
+		font-weight: bold;
+		margin-bottom: 20px;
+	}
 </style>

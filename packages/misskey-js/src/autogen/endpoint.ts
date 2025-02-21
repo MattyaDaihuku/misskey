@@ -295,11 +295,15 @@ import type {
 	FollowingCreateResponse,
 	FollowingDeleteRequest,
 	FollowingDeleteResponse,
+	FollowingHistoryRequest,
+	FollowingHistoryResponse,
 	FollowingInvalidateRequest,
 	FollowingInvalidateResponse,
 	FollowingRequestsAcceptRequest,
 	FollowingRequestsCancelRequest,
 	FollowingRequestsCancelResponse,
+	FollowingRequestsHistoryRequest,
+	FollowingRequestsHistoryResponse,
 	FollowingRequestsListRequest,
 	FollowingRequestsListResponse,
 	FollowingRequestsRejectRequest,
@@ -458,6 +462,10 @@ import type {
 	NotesRenotesResponse,
 	NotesRepliesRequest,
 	NotesRepliesResponse,
+	NotesScheduleCreateRequest,
+	NotesScheduleDeleteRequest,
+	NotesScheduleListRequest,
+	NotesScheduleListResponse,
 	NotesSearchRequest,
 	NotesSearchResponse,
 	NotesSearchByTagRequest,
@@ -778,9 +786,11 @@ export type Endpoints = {
 	'flash/update': { req: FlashUpdateRequest; res: EmptyResponse };
 	'following/create': { req: FollowingCreateRequest; res: FollowingCreateResponse };
 	'following/delete': { req: FollowingDeleteRequest; res: FollowingDeleteResponse };
+	'following/history': { req: FollowingHistoryRequest; res: FollowingHistoryResponse };
 	'following/invalidate': { req: FollowingInvalidateRequest; res: FollowingInvalidateResponse };
 	'following/requests/accept': { req: FollowingRequestsAcceptRequest; res: EmptyResponse };
 	'following/requests/cancel': { req: FollowingRequestsCancelRequest; res: FollowingRequestsCancelResponse };
+	'following/requests/history': { req: FollowingRequestsHistoryRequest; res: FollowingRequestsHistoryResponse };
 	'following/requests/list': { req: FollowingRequestsListRequest; res: FollowingRequestsListResponse };
 	'following/requests/reject': { req: FollowingRequestsRejectRequest; res: EmptyResponse };
 	'following/requests/sent': { req: FollowingRequestsSentRequest; res: FollowingRequestsSentResponse };
@@ -890,6 +900,9 @@ export type Endpoints = {
 	'notes/reactions/delete': { req: NotesReactionsDeleteRequest; res: EmptyResponse };
 	'notes/renotes': { req: NotesRenotesRequest; res: NotesRenotesResponse };
 	'notes/replies': { req: NotesRepliesRequest; res: NotesRepliesResponse };
+	'notes/schedule/create': { req: NotesScheduleCreateRequest; res: EmptyResponse };
+	'notes/schedule/delete': { req: NotesScheduleDeleteRequest; res: EmptyResponse };
+	'notes/schedule/list': { req: NotesScheduleListRequest; res: NotesScheduleListResponse };
 	'notes/search': { req: NotesSearchRequest; res: NotesSearchResponse };
 	'notes/search-by-tag': { req: NotesSearchByTagRequest; res: NotesSearchByTagResponse };
 	'notes/show': { req: NotesShowRequest; res: NotesShowResponse };

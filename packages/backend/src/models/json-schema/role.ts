@@ -292,6 +292,14 @@ export const packedRolePoliciesSchema = {
 			type: 'boolean',
 			optional: false, nullable: false,
 		},
+		scheduleNoteMax: {
+			type: 'integer',
+			optional: false, nullable: false,
+		},
+		canReadFollowHistory: {
+			type: 'boolean',
+			optional: false, nullable: false,
+		},
 	},
 } as const;
 

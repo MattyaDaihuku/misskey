@@ -44,8 +44,9 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</template>
 			</template>
 		</MkSelect>
+		<MkSwitch v-if="switchLabel" v-model="switchValue" style="display: flex; margin: 1em 0; justify-content: center;">{{ switchLabel }}</MkSwitch>
 		<div v-if="(showOkButton || showCancelButton) && !actions" :class="$style.buttons">
-			<MkButton v-if="showOkButton" data-cy-modal-dialog-ok inline primary rounded :autofocus="!input && !select" :disabled="okButtonDisabledReason != null" @click="ok">{{ okText ?? ((showCancelButton || input || select) ? i18n.ts.ok : i18n.ts.gotIt) }}</MkButton>
+			<MkButton v-if="showOkButton" data-cy-modal-dialog-ok inline primary rounded :autofocus="!input && !select" :disabled="okDisabled || okButtonDisabledReason != null" @click="ok">{{ okText ?? ((showCancelButton || input || select) ? i18n.ts.ok : i18n.ts.gotIt) }}<span v-if="okDisabled && okWaitInitiated"> ({{ sec }})</span></MkButton>
 			<MkButton v-if="showCancelButton || input || select" data-cy-modal-dialog-cancel inline rounded @click="cancel">{{ cancelText ?? i18n.ts.cancel }}</MkButton>
 		</div>
 		<div v-if="actions" :class="$style.buttons">
@@ -56,11 +57,12 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, shallowRef, computed } from 'vue';
+import { ref, shallowRef, computed, onMounted, watch } from 'vue';
 import MkModal from '@/components/MkModal.vue';
 import MkButton from '@/components/MkButton.vue';
 import MkInput from '@/components/MkInput.vue';
 import MkSelect from '@/components/MkSelect.vue';
+import MkSwitch from '@/components/MkSwitch.vue';
 import { i18n } from '@/i18n.js';
 
 type Input = {
@@ -93,6 +95,7 @@ const props = withDefaults(defineProps<{
 	text?: string;
 	input?: Input;
 	select?: Select;
+	switchLabel?: string | null;
 	icon?: string;
 	actions?: {
 		text: string;
@@ -104,16 +107,30 @@ const props = withDefaults(defineProps<{
 	showCancelButton?: boolean;
 	cancelableByBgClick?: boolean;
 	okText?: string;
+	okWaitInitiate?: 'dialog' | 'input' | 'switch';
+	okWaitDuration?: number;
 	cancelText?: string;
 }>(), {
 	type: 'info',
+	icon: undefined,
+	title: undefined,
+	text: undefined,
+	input: undefined,
+	select: undefined,
+	switchLabel: undefined,
+	details: undefined,
+	actions: undefined,
 	showOkButton: true,
 	showCancelButton: false,
 	cancelableByBgClick: true,
+	okText: undefined,
+	okWaitInitiate: undefined,
+	okWaitDuration: 0,
+	cancelText: undefined,
 });
 
 const emit = defineEmits<{
-	(ev: 'done', v: { canceled: true } | { canceled: false, result: Result }): void;
+	(ev: 'done', v: { canceled: true } | { canceled: false, result: Result, toggle: boolean }): void;
 	(ev: 'closed'): void;
 }>();
 
@@ -121,6 +138,16 @@ const modal = shallowRef<InstanceType<typeof MkModal>>();
 
 const inputValue = ref<string | number | null>(props.input?.default ?? null);
 const selectedValue = ref(props.select?.default ?? null);
+const switchValue = ref<boolean>(false);
+
+const sec = ref(props.okWaitDuration);
+const okWaitInitiated = computed(() => {
+	if (props.okWaitInitiate === 'dialog') return true;
+	if (props.okWaitInitiate === 'input') return inputValue.value !== null;
+	if (props.okWaitInitiate === 'switch') return switchValue.value;
+	return false;
+});
+const okDisabled = computed(() => sec.value > 0);
 
 const okButtonDisabledReason = computed<null | 'charactersExceeded' | 'charactersBelow'>(() => {
 	if (props.input) {
@@ -141,9 +168,9 @@ const okButtonDisabledReason = computed<null | 'charactersExceeded' | 'character
 
 // overload function を使いたいので lint エラーを無視する
 function done(canceled: true): void;
-function done(canceled: false, result: Result): void; // eslint-disable-line no-redeclare
-function done(canceled: boolean, result?: Result): void { // eslint-disable-line no-redeclare
-	emit('done', { canceled, result } as { canceled: true } | { canceled: false, result: Result });
+function done(canceled: false, result: Result, toggle: boolean): void; // eslint-disable-line no-redeclare
+function done(canceled: boolean, result?: Result, toggle?: boolean ): void { // eslint-disable-line no-redeclare
+	emit('done', { canceled, result, toggle } as { canceled: true } | { canceled: false, result: Result, toggle: boolean });
 	modal.value?.close();
 }
 
@@ -154,7 +181,7 @@ async function ok() {
 		props.input ? inputValue.value :
 		props.select ? selectedValue.value :
 		true;
-	done(false, result);
+	done(false, result, switchValue.value);
 }
 
 function cancel() {
@@ -173,6 +200,23 @@ function onInputKeydown(evt: KeyboardEvent) {
 		ok();
 	}
 }
+
+watch(okWaitInitiated, () => {
+	sec.value = props.okWaitDuration;
+});
+
+onMounted(() => {
+	sec.value = props.okWaitDuration;
+	if (sec.value > 0) {
+		const waitTimer = setInterval(() => {
+			if (!okWaitInitiated.value) return;
+			if (sec.value < 0) {
+				clearInterval(waitTimer);
+			}
+			sec.value = sec.value - 1;
+		}, 1000);
+	}
+});
 </script>
 
 <style lang="scss" module>

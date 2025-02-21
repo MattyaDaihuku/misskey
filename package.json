@@ -1,10 +1,10 @@
 {
 	"name": "misskey",
-	"version": "2025.2.0",
+	"version": "2025.2.0-shahu.1.8.0",
 	"codename": "nasubi",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/misskey-dev/misskey.git"
+		"url": "https://github.com/team-shahu/misskey"
 	},
 	"packageManager": "pnpm@9.6.0",
 	"workspaces": [
@@ -51,6 +51,7 @@
 		"lodash": "4.17.21"
 	},
 	"dependencies": {
+		"@isaacs/ttlcache": "^1.4.1",
 		"cssnano": "6.1.2",
 		"execa": "8.0.1",
 		"fast-glob": "3.3.2",

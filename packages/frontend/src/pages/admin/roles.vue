@@ -51,6 +51,13 @@ SPDX-License-Identifier: AGPL-3.0-only
 							</MkSwitch>
 						</MkFolder>
 
+						<MkFolder v-if="matchQuery([i18n.ts._role._options.scheduleNoteMax, 'scheduleNoteMax'])">
+							<template #label>{{ i18n.ts._role._options.scheduleNoteMax }}</template>
+							<template #suffix>{{ policies.scheduleNoteMax }}</template>
+							<MkInput v-model="policies.scheduleNoteMax" type="number">
+							</MkInput>
+						</MkFolder>
+
 						<MkFolder v-if="matchQuery([i18n.ts._role._options.mentionMax, 'mentionLimit'])">
 							<template #label>{{ i18n.ts._role._options.mentionMax }}</template>
 							<template #suffix>{{ policies.mentionLimit }}</template>
@@ -253,6 +260,14 @@ SPDX-License-Identifier: AGPL-3.0-only
 							<template #label>{{ i18n.ts._role._options.canImportUserLists }}</template>
 							<template #suffix>{{ policies.canImportUserLists ? i18n.ts.yes : i18n.ts.no }}</template>
 							<MkSwitch v-model="policies.canImportUserLists">
+								<template #label>{{ i18n.ts.enable }}</template>
+							</MkSwitch>
+						</MkFolder>
+
+						<MkFolder v-if="matchQuery([i18n.ts._role._options.canReadFollowHistory, 'canReadFollowHistory'])">
+							<template #label>{{ i18n.ts._role._options.canReadFollowHistory }}<span class="_beta">{{ i18n.ts.originalFeature }}</span></template>
+							<template #suffix>{{ policies.canReadFollowHistory ? i18n.ts.yes : i18n.ts.no }}</template>
+							<MkSwitch v-model="policies.canReadFollowHistory">
 								<template #label>{{ i18n.ts.enable }}</template>
 							</MkSwitch>
 						</MkFolder>

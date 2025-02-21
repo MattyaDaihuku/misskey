@@ -192,6 +192,10 @@ export const meta = {
 					optional: false, nullable: false,
 				},
 			},
+			emailWhitelist: {
+				type: 'boolean',
+				optional: false, nullable: false,
+			},
 			preservedUsernames: {
 				type: 'array',
 				optional: false, nullable: false,
@@ -522,6 +526,13 @@ export const meta = {
 					optional: false, nullable: false,
 				},
 			},
+			customSplashText: {
+				type: 'array',
+				optional: false, nullable: false,
+				items: {
+					type: 'string',
+				},
+			},
 		},
 	},
 } as const;
@@ -643,6 +654,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				enableServerMachineStats: instance.enableServerMachineStats,
 				enableIdenticonGeneration: instance.enableIdenticonGeneration,
 				bannedEmailDomains: instance.bannedEmailDomains,
+				emailWhitelist: instance.emailWhitelist,
 				policies: { ...DEFAULT_POLICIES, ...instance.policies },
 				manifestJsonOverride: instance.manifestJsonOverride,
 				enableFanoutTimeline: instance.enableFanoutTimeline,
@@ -662,6 +674,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				urlPreviewSummaryProxyUrl: instance.urlPreviewSummaryProxyUrl,
 				federation: instance.federation,
 				federationHosts: instance.federationHosts,
+				customSplashText: instance.customSplashText,
 			};
 		});
 	}

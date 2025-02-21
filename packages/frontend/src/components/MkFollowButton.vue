@@ -4,35 +4,35 @@ SPDX-License-Identifier: AGPL-3.0-only
 -->
 
 <template>
-<button
-	class="_button"
-	:class="[$style.root, { [$style.wait]: wait, [$style.active]: isFollowing || hasPendingFollowRequestFromYou, [$style.full]: full, [$style.large]: large }]"
-	:disabled="wait"
-	@click="onClick"
->
-	<template v-if="!wait">
-		<template v-if="hasPendingFollowRequestFromYou && user.isLocked">
-			<span v-if="full" :class="$style.text">{{ i18n.ts.followRequestPending }}</span><i class="ti ti-hourglass-empty"></i>
+	<button
+		class="_button"
+		:class="[$style.root, { [$style.wait]: wait, [$style.active]: isFollowing || hasPendingFollowRequestFromYou, [$style.full]: full, [$style.large]: large }]"
+		:disabled="wait"
+		@click="onClick"
+	>
+		<template v-if="!wait">
+			<template v-if="hasPendingFollowRequestFromYou && user.isLocked">
+				<span v-if="full" :class="$style.text">{{ i18n.ts.followRequestPending }}</span><i class="ti ti-hourglass-empty"></i>
+			</template>
+			<template v-else-if="hasPendingFollowRequestFromYou && !user.isLocked">
+				<!-- つまりリモートフォローの場合。 -->
+				<span v-if="full" :class="$style.text">{{ i18n.ts.processing }}</span><MkLoading :em="true" :colored="false"/>
+			</template>
+			<template v-else-if="isFollowing">
+				<span v-if="full" :class="$style.text">{{ i18n.ts.youFollowing }}</span><i class="ti ti-minus"></i>
+			</template>
+			<template v-else-if="!isFollowing && user.isLocked">
+				<span v-if="full" :class="$style.text">{{ i18n.ts.followRequest }}</span><i class="ti ti-plus"></i>
+			</template>
+			<template v-else-if="!isFollowing && !user.isLocked">
+				<span v-if="full" :class="$style.text">{{ i18n.ts.follow }}</span><i class="ti ti-plus"></i>
+			</template>
 		</template>
-		<template v-else-if="hasPendingFollowRequestFromYou && !user.isLocked">
-			<!-- つまりリモートフォローの場合。 -->
+		<template v-else>
 			<span v-if="full" :class="$style.text">{{ i18n.ts.processing }}</span><MkLoading :em="true" :colored="false"/>
 		</template>
-		<template v-else-if="isFollowing">
-			<span v-if="full" :class="$style.text">{{ i18n.ts.youFollowing }}</span><i class="ti ti-minus"></i>
-		</template>
-		<template v-else-if="!isFollowing && user.isLocked">
-			<span v-if="full" :class="$style.text">{{ i18n.ts.followRequest }}</span><i class="ti ti-plus"></i>
-		</template>
-		<template v-else-if="!isFollowing && !user.isLocked">
-			<span v-if="full" :class="$style.text">{{ i18n.ts.follow }}</span><i class="ti ti-plus"></i>
-		</template>
+	</button>
 	</template>
-	<template v-else>
-		<span v-if="full" :class="$style.text">{{ i18n.ts.processing }}</span><MkLoading :em="true" :colored="false"/>
-	</template>
-</button>
-</template>
 
 <script lang="ts" setup>
 import { onBeforeUnmount, onMounted, ref } from 'vue';
@@ -195,7 +195,17 @@ onBeforeUnmount(() => {
 	}
 
 	&:focus-visible {
-		outline-offset: 2px;
+		&:after {
+			content: "";
+			pointer-events: none;
+			position: absolute;
+			top: -5px;
+			right: -5px;
+			bottom: -5px;
+			left: -5px;
+			border: 2px solid var(--focus);
+			border-radius: 32px;
+		}
 	}
 
 	&:hover {
