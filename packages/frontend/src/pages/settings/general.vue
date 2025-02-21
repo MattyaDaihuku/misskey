@@ -84,7 +84,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 					<option value="always">{{ i18n.ts._instanceTicker.always }}</option>
 				</MkSelect>
 				<MkSwitch v-if="instance.federation !== 'none' && instanceTicker !== 'none'" v-model="instanceIcon">
-					<template #caption>{{ i18n.ts.hideReactionUsersDescription }}</template>
+					<template #caption>{{ i18n.ts.instanceIconDescription }}</template>
 					{{ i18n.ts.instanceIcon }}
 					<span class="_beta">{{ i18n.ts.originalFeature }}</span>
 				</MkSwitch>
