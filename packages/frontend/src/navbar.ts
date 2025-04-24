@@ -167,6 +167,12 @@ export const navbarItemDef = reactive({
 			}
 		},
 	},
+	nayamiBox: {
+		title: i18n.ts._yami.nayamiBox,
+		icon: 'ti ti-mailbox',
+		show: computed(() => $i != null),
+		to: '/nayami-box',
+	},
 	about: {
 		title: i18n.ts.about,
 		icon: 'ti ti-info-circle',
