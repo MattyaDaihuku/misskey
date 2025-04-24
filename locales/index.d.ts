@@ -11908,10 +11908,6 @@ export interface Locale extends ILocale {
          * フォローしているユーザーのやみノートを表示
          */
         "showYamiFollowingNotes": string;
-        /**
-         * なやみボックス
-         */
-        "nayamiBox": string;
         "_yamiModeSwitcher": {
             /**
              * やみモードに切り替えますか？やみモードにすると、やみノートを閲覧・投稿できるようになります

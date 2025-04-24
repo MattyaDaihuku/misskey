@@ -217,10 +217,6 @@ export const ROUTE_DEF = [{
 	path: '/about-misskey',
 	component: page(() => import('@/pages/about-misskey.vue')),
 }, {
-	path: '/nayami-box',
-	component: page(() => import('@/pages/nayami-box.vue')),
-	loginRequired: true,
-}, {
 	path: '/invite',
 	name: 'invite',
 	component: page(() => import('@/pages/invite.vue')),
