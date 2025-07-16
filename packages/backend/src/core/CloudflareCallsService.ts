@@ -61,7 +61,7 @@ export class CloudflareCallsService {
 			}
 
 			const data = await response.json();
-			
+
 			this.logger.info(`Created Cloudflare Calls session: ${sessionId}`);
 
 			return {
@@ -70,7 +70,7 @@ export class CloudflareCallsService {
 			};
 		} catch (error) {
 			this.logger.error('Failed to create Cloudflare Calls session', { error, sessionId });
-			
+
 			// フォールバック: ダミーの設定を返す
 			return {
 				sessionId,

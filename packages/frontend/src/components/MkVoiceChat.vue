@@ -11,7 +11,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 			{{ i18n.ts._voiceChat.startVoiceSpace }}
 		</MkButton>
 	</div>
-	
+
 	<div v-if="isActive" :class="$style.activeChat">
 		<div :class="$style.header">
 			<div :class="$style.title">
@@ -19,15 +19,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 				{{ roomTitle || i18n.ts._voiceChat.voiceSpace }}
 			</div>
 			<div :class="$style.controls">
-				<button 
-					:class="[$style.controlButton, { [$style.muted]: isMuted }]" 
+				<button
+					:class="[$style.controlButton, { [$style.muted]: isMuted }]"
 					@click="toggleMute"
 					:title="isMuted ? i18n.ts._voiceChat.unmute : i18n.ts._voiceChat.mute"
 				>
 					<i :class="isMuted ? 'ti ti-microphone-off' : 'ti ti-microphone'"></i>
 				</button>
-				<button 
-					:class="$style.controlButton" 
+				<button
+					:class="$style.controlButton"
 					@click="leaveRoom"
 					:title="i18n.ts._voiceChat.leave"
 				>
@@ -35,7 +35,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</button>
 			</div>
 		</div>
-		
+
 		<div :class="$style.participants">
 			<div v-for="participant in participants" :key="participant.id" :class="$style.participant">
 				<MkAvatar :user="participant.user" :class="$style.avatar" :size="40"/>
@@ -49,7 +49,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 				</div>
 			</div>
 		</div>
-		
+
 		<div v-if="isHost" :class="$style.hostControls">
 			<MkButton @click="inviteUsers" small>
 				<i class="ti ti-user-plus"></i>
@@ -104,23 +104,23 @@ async function startVoiceChat() {
 	try {
 		// マイクの権限を取得
 		localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
-		
+
 		// バックエンドに音声チャットルームの作成を要求
 		const room = await misskeyApi('voice-chat/create', {
 			title: roomTitle.value || undefined,
 		});
-		
+
 		roomId.value = room.id;
 		isActive.value = true;
 		isHost.value = true;
-		
+
 		// Cloudflare Callsセッションを初期化
 		await initializeCloudflareCallsSession(room.cloudflareCallsSessionToken);
-		
+
 		// ストリームからの更新を受信
 		stream.useChannel('voiceChat', {}, roomId.value);
 		stream.on('voiceChat', onVoiceChatUpdate);
-		
+
 		// 自分を参加者リストに追加
 		participants.value = [{
 			id: $i!.id,
@@ -128,7 +128,7 @@ async function startVoiceChat() {
 			isMuted: false,
 			isSpeaking: false,
 		}];
-		
+
 	} catch (error) {
 		console.error('音声チャット開始エラー:', error);
 		os.alert({
@@ -145,7 +145,7 @@ async function initializeCloudflareCallsSession(sessionToken: string) {
 		// const { CallsApplication } = await import('@cloudflare/calls');
 		// cloudflareCallsApp.value = new CallsApplication();
 		// await cloudflareCallsApp.value.connect(sessionToken);
-		
+
 		console.log('Cloudflare Calls session initialized:', sessionToken);
 	} catch (error) {
 		console.error('Cloudflare Calls初期化エラー:', error);
@@ -155,13 +155,13 @@ async function initializeCloudflareCallsSession(sessionToken: string) {
 
 function toggleMute() {
 	isMuted.value = !isMuted.value;
-	
+
 	if (localStream) {
 		localStream.getAudioTracks().forEach(track => {
 			track.enabled = !isMuted.value;
 		});
 	}
-	
+
 	// サーバーに状態を送信
 	if (roomId.value) {
 		misskeyApi('voice-chat/update-participant', {
@@ -178,23 +178,23 @@ async function leaveRoom() {
 				roomId: roomId.value,
 			});
 		}
-		
+
 		// ローカルストリームを停止
 		if (localStream) {
 			localStream.getTracks().forEach(track => track.stop());
 			localStream = null;
 		}
-		
+
 		// Peer Connectionsをクローズ
 		peerConnections.forEach(pc => pc.close());
 		peerConnections.clear();
-		
+
 		// Cloudflare Callsセッションを終了
 		if (cloudflareCallsApp.value) {
 			await cloudflareCallsApp.value.disconnect();
 			cloudflareCallsApp.value = null;
 		}
-		
+
 		// UIを初期状態に戻す
 		isActive.value = false;
 		isHost.value = false;
@@ -202,10 +202,10 @@ async function leaveRoom() {
 		participants.value = [];
 		roomId.value = null;
 		roomTitle.value = '';
-		
+
 		// ストリームの購読を解除
 		stream.off('voiceChat', onVoiceChatUpdate);
-		
+
 	} catch (error) {
 		console.error('音声チャット退出エラー:', error);
 	}
@@ -235,12 +235,12 @@ async function inviteUsers() {
 	// ユーザー選択ダイアログを表示
 	try {
 		const user = await os.selectUser({ includeSelf: false, localOnly: false });
-		
+
 		await misskeyApi('voice-chat/invite', {
 			roomId: roomId.value,
 			userIds: [user.id],
 		});
-		
+
 		os.toast(i18n.ts._voiceChat.invitationSent);
 	} catch (error) {
 		if (error === 'canceled') return;
@@ -312,11 +312,11 @@ onUnmounted(() => {
 	color: var(--MI_THEME-fg);
 	cursor: pointer;
 	transition: all 0.2s;
-	
+
 	&:hover {
 		background: var(--MI_THEME-buttonHoverBg);
 	}
-	
+
 	&.muted {
 		background: var(--MI_THEME-error);
 		color: white;
