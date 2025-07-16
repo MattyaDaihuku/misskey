@@ -438,6 +438,10 @@ export * as 'chat/rooms/invitations/inbox' from './endpoints/chat/rooms/invitati
 export * as 'chat/rooms/invitations/outbox' from './endpoints/chat/rooms/invitations/outbox.js';
 export * as 'chat/history' from './endpoints/chat/history.js';
 export * as 'chat/read-all' from './endpoints/chat/read-all.js';
+export * as 'voice-chat/create' from './endpoints/voice-chat/create.js';
+export * as 'voice-chat/leave' from './endpoints/voice-chat/leave.js';
+export * as 'voice-chat/invite' from './endpoints/voice-chat/invite.js';
+export * as 'voice-chat/update-participant' from './endpoints/voice-chat/update-participant.js';
 export * as 'v2/admin/emoji/list' from './endpoints/v2/admin/emoji/list.js';
 export * as 'admin/approve-user' from './endpoints/admin/approve-user.js';
 export * as 'admin/reject-user' from './endpoints/admin/reject-user.js';

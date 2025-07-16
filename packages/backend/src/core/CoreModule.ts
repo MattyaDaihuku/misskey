@@ -75,6 +75,7 @@ import { FeaturedService } from './FeaturedService.js';
 import { FanoutTimelineService } from './FanoutTimelineService.js';
 import { ChannelFollowingService } from './ChannelFollowingService.js';
 import { ChatService } from './ChatService.js';
+import { VoiceChatService } from './VoiceChatService.js';
 import { RegistryApiService } from './RegistryApiService.js';
 import { ReversiService } from './ReversiService.js';
 
@@ -374,6 +375,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		FanoutTimelineEndpointService,
 		ChannelFollowingService,
 		ChatService,
+		VoiceChatService,
 		RegistryApiService,
 		ReversiService,
 

@@ -176,6 +176,37 @@ export interface ChatEventTypes {
 	};
 }
 
+export interface VoiceChatEventTypes {
+	roomCreated: {
+		room: {
+			id: string;
+			title: string | null;
+			hostId: string;
+			createdAt: Date;
+		};
+	};
+	participantJoined: {
+		participant: {
+			id: string;
+			user: Packed<'UserLite'>;
+			isMuted: boolean;
+			isSpeaking: boolean;
+		};
+	};
+	participantLeft: {
+		participantId: string;
+	};
+	participantUpdated: {
+		participant: {
+			id: string;
+			isMuted: boolean;
+		};
+	};
+	roomClosed: {
+		roomId: string;
+	};
+}
+
 export interface ReversiEventTypes {
 	matched: {
 		game: Packed<'ReversiGameDetailed'>;
@@ -324,6 +355,10 @@ export type GlobalEvents = {
 		name: `reversiGameStream:${MiReversiGame['id']}`;
 		payload: EventTypesToEventPayload<ReversiGameEventTypes>;
 	};
+	voiceChat: {
+		name: `voiceChatStream:${string}`;
+		payload: EventTypesToEventPayload<VoiceChatEventTypes>;
+	};
 };
 
 // API event definitions
@@ -432,5 +467,10 @@ export class GlobalEventService {
 	@bindThis
 	public publishReversiGameStream<K extends keyof ReversiGameEventTypes>(gameId: MiReversiGame['id'], type: K, value?: ReversiGameEventTypes[K]): void {
 		this.publish(`reversiGameStream:${gameId}`, type, typeof value === 'undefined' ? null : value);
+	}
+
+	@bindThis
+	public publishVoiceChatStream<K extends keyof VoiceChatEventTypes>(roomId: string, type: K, value?: VoiceChatEventTypes[K]): void {
+		this.publish(`voiceChatStream:${roomId}`, type, typeof value === 'undefined' ? null : value);
 	}
 }

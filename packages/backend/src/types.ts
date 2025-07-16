@@ -50,6 +50,7 @@ export const notificationTypes = [
 	'createToken',
 	'scheduledNoteFailed',
 	'scheduledNotePosted',
+	'voiceChatInvite',
 	'app',
 	'test',
 ] as const;

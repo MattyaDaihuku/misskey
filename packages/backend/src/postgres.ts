@@ -87,6 +87,8 @@ import { MiReversiGame } from '@/models/ReversiGame.js';
 import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 import { MiChatApproval } from '@/models/ChatApproval.js';
 import { MiSystemAccount } from '@/models/SystemAccount.js';
+import { MiVoiceChatRoom } from '@/models/VoiceChatRoom.js';
+import { MiVoiceChatParticipant } from '@/models/VoiceChatParticipant.js';
 
 pg.types.setTypeParser(20, Number);
 
@@ -259,6 +261,8 @@ export const entities = [
 	MiChatApproval,
 	MiBubbleGameRecord,
 	MiReversiGame,
+	MiVoiceChatRoom,
+	MiVoiceChatParticipant,
 	...charts,
 ];
 
@@ -294,7 +298,7 @@ export function createPostgresDataSource(config: Config) {
 				})),
 			},
 		} : {}),
-		synchronize: process.env.NODE_ENV === 'test',
+		synchronize: process.env.NODE_ENV === 'test' || process.env.FORCE_SYNC === 'true',
 		dropSchema: process.env.NODE_ENV === 'test',
 		cache: !config.db.disableCache && process.env.NODE_ENV !== 'test' ? { // dbをcloseしても何故かredisのコネクションが内部的に残り続けるようで、テストの際に支障が出るため無効にする(キャッシュも含めてテストしたいため本当は有効にしたいが...)
 			type: 'ioredis',

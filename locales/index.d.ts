@@ -5927,6 +5927,68 @@ export interface Locale extends ILocale {
          * 送信
          */
         "send": string;
+    };
+    "_voiceChat": {
+        /**
+         * 音声スペースを開始
+         */
+        "startVoiceSpace": string;
+        /**
+         * 音声スペース
+         */
+        "voiceSpace": string;
+        /**
+         * ミュート
+         */
+        "mute": string;
+        /**
+         * ミュート解除
+         */
+        "unmute": string;
+        /**
+         * 退出
+         */
+        "leave": string;
+        /**
+         * 招待
+         */
+        "invite": string;
+        /**
+         * 招待を送信しました
+         */
+        "invitationSent": string;
+        /**
+         * 音声チャットの開始に失敗しました
+         */
+        "failedToStart": string;
+        /**
+         * 招待の送信に失敗しました
+         */
+        "failedToInvite": string;
+        /**
+         * マイクの使用許可が必要です
+         */
+        "microphonePermissionRequired": string;
+        /**
+         * 接続中...
+         */
+        "connecting": string;
+        /**
+         * 接続しました
+         */
+        "connected": string;
+        /**
+         * 切断されました
+         */
+        "disconnected": string;
+        /**
+         * {name}が参加しました
+         */
+        "participantJoined": ParameterizedString<"name">;
+        /**
+         * {name}が退出しました
+         */
+        "participantLeft": ParameterizedString<"name">;
         /**
          * 改行
          */

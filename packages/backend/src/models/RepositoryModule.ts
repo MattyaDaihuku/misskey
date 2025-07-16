@@ -83,6 +83,8 @@ import {
 	MiChatRoomMembership,
 	MiChatRoomInvitation,
 	MiChatApproval,
+	MiVoiceChatRoom,
+	MiVoiceChatParticipant,
 } from './_.js';
 import type { Provider } from '@nestjs/common';
 import type { DataSource } from 'typeorm';
@@ -537,6 +539,18 @@ const $noteScheduleRepository: Provider = {
 	inject: [DI.db],
 };
 
+const $voiceChatRoomsRepository: Provider = {
+	provide: DI.voiceChatRoomsRepository,
+	useFactory: (db: DataSource) => db.getRepository(MiVoiceChatRoom).extend(miRepository as MiRepository<MiVoiceChatRoom>),
+	inject: [DI.db],
+};
+
+const $voiceChatParticipantsRepository: Provider = {
+	provide: DI.voiceChatParticipantsRepository,
+	useFactory: (db: DataSource) => db.getRepository(MiVoiceChatParticipant).extend(miRepository as MiRepository<MiVoiceChatParticipant>),
+	inject: [DI.db],
+};
+
 @Module({
 	imports: [],
 	providers: [
@@ -615,6 +629,8 @@ const $noteScheduleRepository: Provider = {
 		$bubbleGameRecordsRepository,
 		$reversiGamesRepository,
 		$noteScheduleRepository,
+		$voiceChatRoomsRepository,
+		$voiceChatParticipantsRepository,
 	],
 	exports: [
 		$usersRepository,
@@ -692,6 +708,8 @@ const $noteScheduleRepository: Provider = {
 		$bubbleGameRecordsRepository,
 		$reversiGamesRepository,
 		$noteScheduleRepository,
+		$voiceChatRoomsRepository,
+		$voiceChatParticipantsRepository,
 	],
 })
 export class RepositoryModule {
