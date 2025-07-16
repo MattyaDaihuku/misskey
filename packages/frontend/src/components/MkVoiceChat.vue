@@ -233,17 +233,17 @@ function onVoiceChatUpdate(data: any) {
 
 async function inviteUsers() {
 	// ユーザー選択ダイアログを表示
-	const { canceled, result } = await os.selectUsers();
-	if (canceled) return;
-	
 	try {
+		const user = await os.selectUser({ includeSelf: false, localOnly: false });
+		
 		await misskeyApi('voice-chat/invite', {
 			roomId: roomId.value,
-			userIds: result.map(u => u.id),
+			userIds: [user.id],
 		});
 		
 		os.toast(i18n.ts._voiceChat.invitationSent);
 	} catch (error) {
+		if (error === 'canceled') return;
 		console.error('招待エラー:', error);
 		os.alert({
 			type: 'error',

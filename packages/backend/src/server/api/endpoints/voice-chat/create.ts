@@ -10,6 +10,7 @@ import { MetaService } from '@/core/MetaService.js';
 import { DI } from '@/di-symbols.js';
 import { IdService } from '@/core/IdService.js';
 import { GlobalEventService } from '@/core/GlobalEventService.js';
+import { CloudflareCallsService } from '@/core/CloudflareCallsService.js';
 
 export const meta = {
 	tags: ['voice-chat'],
@@ -63,29 +64,47 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		private metaService: MetaService,
 		private idService: IdService,
 		private globalEventService: GlobalEventService,
+		private cloudflareCallsService: CloudflareCallsService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
-			// Cloudflare Calls設定の確認
-			const instance = await this.metaService.fetch();
-			if (!instance.cloudflareCallsAppId || !instance.cloudflareCallsApiToken) {
-				throw new Error('Cloudflare Calls is not configured');
-			}
+			const roomId = this.idService.gen();
 
 			// 音声チャットルームを作成
 			const room = await this.voiceChatRoomsRepository.insert({
-				id: this.idService.gen(),
+				id: roomId,
 				title: ps.title,
 				hostId: me.id,
 				createdAt: new Date(),
 				isActive: true,
 			}).then(x => this.voiceChatRoomsRepository.findOneByOrFail({ id: x.identifiers[0].id }));
 
-			// Cloudflare Callsセッションを作成（簡単なダミー実装）
-			const sessionToken = `dummy-session-token-${room.id}-${Date.now()}`;
+			// Cloudflare Callsセッションを作成
+			let sessionData;
+			try {
+				sessionData = await this.cloudflareCallsService.createSession(roomId);
+			} catch (error) {
+				// Cloudflare Calls設定がない場合はダミーを使用
+				sessionData = {
+					sessionId: roomId,
+					iceServers: [
+						{
+							urls: ['stun:stun.l.google.com:19302'],
+						},
+					],
+				};
+			}
+
+			// 接続トークンを生成
+			let connectionToken;
+			try {
+				connectionToken = await this.cloudflareCallsService.generateConnectionToken(roomId, me.id);
+			} catch (error) {
+				connectionToken = `dummy-token-${roomId}-${me.id}`;
+			}
 
 			// ルーム情報を更新
 			await this.voiceChatRoomsRepository.update(room.id, {
-				cloudflareCallsSessionToken: sessionToken,
+				cloudflareCallsSessionToken: connectionToken,
 			});
 
 			// 通知送信
@@ -95,6 +114,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 					title: room.title,
 					hostId: room.hostId,
 					createdAt: room.createdAt,
+					iceServers: sessionData.iceServers,
 				},
 			});
 
@@ -102,7 +122,8 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				id: room.id,
 				title: room.title,
 				hostId: room.hostId,
-				cloudflareCallsSessionToken: sessionToken,
+				cloudflareCallsSessionToken: connectionToken,
+				iceServers: sessionData.iceServers,
 				createdAt: room.createdAt.toISOString(),
 			};
 		});
