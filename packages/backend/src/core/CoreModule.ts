@@ -169,6 +169,7 @@ const $AppLockService: Provider = { provide: 'AppLockService', useExisting: AppL
 const $AchievementService: Provider = { provide: 'AchievementService', useExisting: AchievementService };
 const $AvatarDecorationService: Provider = { provide: 'AvatarDecorationService', useExisting: AvatarDecorationService };
 const $CaptchaService: Provider = { provide: 'CaptchaService', useExisting: CaptchaService };
+const $CloudflareCallsService: Provider = { provide: 'CloudflareCallsService', useExisting: CloudflareCallsService };
 const $CustomEmojiService: Provider = { provide: 'CustomEmojiService', useExisting: CustomEmojiService };
 const $DeleteAccountService: Provider = { provide: 'DeleteAccountService', useExisting: DeleteAccountService };
 const $DownloadService: Provider = { provide: 'DownloadService', useExisting: DownloadService };
@@ -469,6 +470,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		$AchievementService,
 		$AvatarDecorationService,
 		$CaptchaService,
+		$CloudflareCallsService,
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$DownloadService,
@@ -617,6 +619,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		AchievementService,
 		AvatarDecorationService,
 		CaptchaService,
+		CloudflareCallsService,
 		CustomEmojiService,
 		DeleteAccountService,
 		DownloadService,
@@ -763,6 +766,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		$AchievementService,
 		$AvatarDecorationService,
 		$CaptchaService,
+		$CloudflareCallsService,
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$DownloadService,

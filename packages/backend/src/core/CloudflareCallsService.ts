@@ -4,18 +4,18 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { MetaRepository } from '@/models/_.js';
+import type { MetasRepository } from '@/models/_.js';
 import { DI } from '@/di-symbols.js';
 import { LoggerService } from '@/core/LoggerService.js';
-import type { Logger } from '@/logger.js';
+import Logger from '@/logger.js';
 
 @Injectable()
 export class CloudflareCallsService {
 	private logger: Logger;
 
 	constructor(
-		@Inject(DI.metaRepository)
-		private metaRepository: MetaRepository,
+		@Inject(DI.metasRepository)
+		private metaRepository: MetasRepository,
 
 		private loggerService: LoggerService,
 	) {
