@@ -6,7 +6,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 <template>
 <div :class="$style.voiceChat">
 	<div v-if="!isActive" :class="$style.startButton">
-		<MkButton @click="startVoiceChat" primary rounded>
+		<MkButton primary rounded @click="startVoiceChat">
 			<i class="ti ti-microphone"></i>
 			{{ i18n.ts._voiceChat.startVoiceSpace }}
 		</MkButton>
@@ -21,15 +21,15 @@ SPDX-License-Identifier: AGPL-3.0-only
 			<div :class="$style.controls">
 				<button
 					:class="[$style.controlButton, { [$style.muted]: isMuted }]"
-					@click="toggleMute"
 					:title="isMuted ? i18n.ts._voiceChat.unmute : i18n.ts._voiceChat.mute"
+					@click="toggleMute"
 				>
 					<i :class="isMuted ? 'ti ti-microphone-off' : 'ti ti-microphone'"></i>
 				</button>
 				<button
 					:class="$style.controlButton"
-					@click="leaveRoom"
 					:title="i18n.ts._voiceChat.leave"
+					@click="leaveRoom"
 				>
 					<i class="ti ti-phone-off"></i>
 				</button>
@@ -51,7 +51,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 		</div>
 
 		<div v-if="isHost" :class="$style.hostControls">
-			<MkButton @click="inviteUsers" small>
+			<MkButton small @click="inviteUsers">
 				<i class="ti ti-user-plus"></i>
 				{{ i18n.ts._voiceChat.invite }}
 			</MkButton>
@@ -122,13 +122,14 @@ async function startVoiceChat() {
 		stream.on('voiceChat', onVoiceChatUpdate);
 
 		// 自分を参加者リストに追加
-		participants.value = [{
-			id: $i!.id,
-			user: $i!,
-			isMuted: false,
-			isSpeaking: false,
-		}];
-
+		if ($i) {
+			participants.value = [{
+				id: $i.id,
+				user: $i,
+				isMuted: false,
+				isSpeaking: false,
+			}];
+		}
 	} catch (error) {
 		console.error('音声チャット開始エラー:', error);
 		os.alert({
@@ -205,7 +206,6 @@ async function leaveRoom() {
 
 		// ストリームの購読を解除
 		stream.off('voiceChat', onVoiceChatUpdate);
-
 	} catch (error) {
 		console.error('音声チャット退出エラー:', error);
 	}
@@ -219,12 +219,13 @@ function onVoiceChatUpdate(data: any) {
 		case 'participantLeft':
 			participants.value = participants.value.filter(p => p.id !== data.participantId);
 			break;
-		case 'participantUpdated':
+		case 'participantUpdated': {
 			const index = participants.value.findIndex(p => p.id === data.participant.id);
 			if (index !== -1) {
 				participants.value[index] = data.participant;
 			}
 			break;
+		}
 		case 'roomClosed':
 			leaveRoom();
 			break;

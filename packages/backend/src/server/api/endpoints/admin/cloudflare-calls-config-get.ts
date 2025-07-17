@@ -4,7 +4,7 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { MetaRepository } from '@/models/_.js';
+import type { MetasRepository } from '@/models/_.js';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import { DI } from '@/di-symbols.js';
 
@@ -27,11 +27,11 @@ export const paramDef = {
 @Injectable()
 export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
 	constructor(
-		@Inject(DI.metaRepository)
-		private metaRepository: MetaRepository,
+		@Inject(DI.metasRepository)
+		private metasRepository: MetasRepository,
 	) {
 		super(meta, paramDef, async () => {
-			const meta = await this.metaRepository.findOneBy({ id: '1' });
+			const meta = await this.metasRepository.findOneBy({ id: '1' });
 			if (!meta) {
 				throw new Error('Meta not found');
 			}
