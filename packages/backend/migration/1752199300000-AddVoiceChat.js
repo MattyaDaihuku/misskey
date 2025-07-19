@@ -7,33 +7,35 @@ export class AddVoiceChat1752199300000 {
     name = 'AddVoiceChat1752199300000'
 
     async up(queryRunner) {
-        // Cloudflare Calls設定をmetaテーブルに追加
-        await queryRunner.query(`ALTER TABLE "meta" ADD "cloudflareCallsAppId" character varying(128)`);
-        await queryRunner.query(`ALTER TABLE "meta" ADD "cloudflareCallsApiToken" character varying(256)`);
+        // 音声チャットルームテーブル作成（存在しない場合のみ）
+        const hasVoiceChatRoom = await queryRunner.hasTable('voice_chat_room');
+        if (!hasVoiceChatRoom) {
+            await queryRunner.query(`CREATE TABLE "voice_chat_room" (
+                "id" character varying(32) NOT NULL,
+                "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+                "endedAt" TIMESTAMP WITH TIME ZONE,
+                "title" character varying(100),
+                "hostId" character varying(32) NOT NULL,
+                "isActive" boolean NOT NULL DEFAULT true,
+                "cloudflareCallsSessionToken" character varying(512),
+                CONSTRAINT "PK_voice_chat_room" PRIMARY KEY ("id")
+            )`);
+        }
 
-        // 音声チャットルームテーブル作成
-        await queryRunner.query(`CREATE TABLE "voice_chat_room" (
-            "id" character varying(32) NOT NULL,
-            "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
-            "endedAt" TIMESTAMP WITH TIME ZONE,
-            "title" character varying(100),
-            "hostId" character varying(32) NOT NULL,
-            "isActive" boolean NOT NULL DEFAULT true,
-            "cloudflareCallsSessionToken" character varying(512),
-            CONSTRAINT "PK_voice_chat_room" PRIMARY KEY ("id")
-        )`);
-
-        // 音声チャット参加者テーブル作成
-        await queryRunner.query(`CREATE TABLE "voice_chat_participant" (
-            "id" character varying(32) NOT NULL,
-            "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
-            "updatedAt" TIMESTAMP WITH TIME ZONE,
-            "roomId" character varying(32) NOT NULL,
-            "userId" character varying(32) NOT NULL,
-            "isMuted" boolean NOT NULL DEFAULT false,
-            "isSpeaking" boolean NOT NULL DEFAULT false,
-            CONSTRAINT "PK_voice_chat_participant" PRIMARY KEY ("id")
-        )`);
+        // 音声チャット参加者テーブル作成（存在しない場合のみ）
+        const hasVoiceChatParticipant = await queryRunner.hasTable('voice_chat_participant');
+        if (!hasVoiceChatParticipant) {
+            await queryRunner.query(`CREATE TABLE "voice_chat_participant" (
+                "id" character varying(32) NOT NULL,
+                "createdAt" TIMESTAMP WITH TIME ZONE NOT NULL,
+                "updatedAt" TIMESTAMP WITH TIME ZONE,
+                "roomId" character varying(32) NOT NULL,
+                "userId" character varying(32) NOT NULL,
+                "isMuted" boolean NOT NULL DEFAULT false,
+                "isSpeaking" boolean NOT NULL DEFAULT false,
+                CONSTRAINT "PK_voice_chat_participant" PRIMARY KEY ("id")
+            )`);
+        }
 
         // インデックス作成
         await queryRunner.query(`CREATE INDEX "IDX_voice_chat_room_createdAt" ON "voice_chat_room" ("createdAt")`);
@@ -68,11 +70,7 @@ export class AddVoiceChat1752199300000 {
         await queryRunner.query(`DROP INDEX "IDX_voice_chat_room_createdAt"`);
 
         // テーブル削除
-        await queryRunner.query(`DROP TABLE "voice_chat_participant"`);
-        await queryRunner.query(`DROP TABLE "voice_chat_room"`);
-
-        // Metaテーブルから列削除
-        await queryRunner.query(`ALTER TABLE "meta" DROP COLUMN "cloudflareCallsApiToken"`);
-        await queryRunner.query(`ALTER TABLE "meta" DROP COLUMN "cloudflareCallsAppId"`);
+        await queryRunner.query(`DROP TABLE IF EXISTS "voice_chat_participant"`);
+        await queryRunner.query(`DROP TABLE IF EXISTS "voice_chat_room"`);
     }
 }

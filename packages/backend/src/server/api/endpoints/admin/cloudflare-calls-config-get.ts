@@ -37,9 +37,9 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			return {
-				cloudflareCallsAppId: meta.cloudflareCallsAppId,
+				cloudflareRealtimeAppId: meta.cloudflareRealtimeAppId,
 				// APIトークンは返さない（セキュリティのため）
-				cloudflareCallsApiTokenSet: !!meta.cloudflareCallsApiToken,
+				cloudflareRealtimeTokenSet: !!meta.cloudflareRealtimeToken,
 			};
 		});
 	}

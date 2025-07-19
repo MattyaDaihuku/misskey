@@ -160,6 +160,14 @@ export type MiNotification = {
 	id: string;
 	createdAt: string;
 	notifierId: MiUser['id'];
+} | {
+	type: 'voiceChatInvite';
+	id: string;
+	createdAt: string;
+	notifierId: MiUser['id'];
+	roomId: string;
+	roomTitle: string | null;
+	hostName: string;
 };
 
 export type MiGroupedNotification = MiNotification | {

@@ -53,9 +53,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 			}
 
 			// ユーザーの存在確認
-			const users = await this.usersRepository.findBy({
-				id: ps.userIds as any,
-			});
+			const users = await this.usersRepository.findByIds(ps.userIds);
 
 			if (users.length !== ps.userIds.length) {
 				throw new Error('Some users not found');
@@ -66,7 +64,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				await this.notificationService.createNotification(user.id, 'voiceChatInvite', {
 					roomId: room.id,
 					roomTitle: room.title,
-					hostName: me.name || me.username,
+					hostName: me.name ?? me.username,
 				}, me.id);
 			}
 		});

@@ -4,7 +4,7 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { MetaRepository } from '@/models/_.js';
+import type { MetasRepository } from '@/models/_.js';
 import { Endpoint } from '@/server/api/endpoint-base.js';
 import { DI } from '@/di-symbols.js';
 
@@ -22,37 +22,37 @@ export const meta = {
 export const paramDef = {
 	type: 'object',
 	properties: {
-		cloudflareCallsAppId: { type: 'string', nullable: true },
-		cloudflareCallsApiToken: { type: 'string', nullable: true },
+		cloudflareRealtimeAppId: { type: 'string', nullable: true },
+		cloudflareRealtimeToken: { type: 'string', nullable: true },
 	},
 } as const;
 
 @Injectable()
 export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-disable-line import/no-default-export
 	constructor(
-		@Inject(DI.metaRepository)
-		private metaRepository: MetaRepository,
+		@Inject(DI.metasRepository)
+		private metasRepository: MetasRepository,
 	) {
 		super(meta, paramDef, async (ps) => {
-			const meta = await this.metaRepository.findOneBy({ id: '1' });
+			const meta = await this.metasRepository.findOneBy({ id: '1' });
 			if (!meta) {
 				throw new Error('Meta not found');
 			}
 
-			if (ps.cloudflareCallsAppId !== undefined) {
-				meta.cloudflareCallsAppId = ps.cloudflareCallsAppId;
+			if (ps.cloudflareRealtimeAppId !== undefined) {
+				meta.cloudflareRealtimeAppId = ps.cloudflareRealtimeAppId;
 			}
 
-			if (ps.cloudflareCallsApiToken !== undefined) {
-				meta.cloudflareCallsApiToken = ps.cloudflareCallsApiToken;
+			if (ps.cloudflareRealtimeToken !== undefined) {
+				meta.cloudflareRealtimeToken = ps.cloudflareRealtimeToken;
 			}
 
-			await this.metaRepository.save(meta);
+			await this.metasRepository.save(meta);
 
 			return {
-				cloudflareCallsAppId: meta.cloudflareCallsAppId,
+				cloudflareRealtimeAppId: meta.cloudflareRealtimeAppId,
 				// APIトークンは返さない（セキュリティのため）
-				cloudflareCallsApiTokenSet: !!meta.cloudflareCallsApiToken,
+				cloudflareRealtimeTokenSet: !!meta.cloudflareRealtimeToken,
 			};
 		});
 	}

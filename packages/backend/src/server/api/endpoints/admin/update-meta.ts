@@ -212,6 +212,9 @@ export const paramDef = {
 		proxyRemoteFiles: { type: 'boolean' },
 		signToActivityPubGet: { type: 'boolean' },
 		allowExternalApRedirect: { type: 'boolean' },
+		useCloudflareRealtime: { type: 'boolean' },
+		cloudflareRealtimeAppId: { type: 'string', nullable: true },
+		cloudflareRealtimeApiToken: { type: 'string', nullable: true },
 	},
 	required: [],
 } as const;
@@ -744,6 +747,18 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			if (ps.allowExternalApRedirect !== undefined) {
 				set.allowExternalApRedirect = ps.allowExternalApRedirect;
+			}
+
+			if (ps.useCloudflareRealtime !== undefined) {
+				set.useCloudflareRealtime = ps.useCloudflareRealtime;
+			}
+
+			if (ps.cloudflareRealtimeAppId !== undefined) {
+				set.cloudflareRealtimeAppId = ps.cloudflareRealtimeAppId;
+			}
+
+			if (ps.cloudflareRealtimeApiToken !== undefined) {
+				set.cloudflareRealtimeApiToken = ps.cloudflareRealtimeApiToken;
 			}
 
 			const before = await this.metaService.fetch(true);

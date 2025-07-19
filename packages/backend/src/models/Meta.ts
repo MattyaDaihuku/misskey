@@ -717,17 +717,24 @@ export class MiMeta {
 	})
 	public allowExternalApRedirect: boolean;
 
+	@Column('boolean', {
+		default: false,
+	})
+	public useCloudflareRealtime: boolean;
+
 	@Column('varchar', {
 		length: 128,
 		nullable: true,
+		name: 'cloudflare_realtime_app_id',
 	})
-	public cloudflareCallsAppId: string | null;
+	public cloudflareRealtimeAppId: string | null;
 
 	@Column('varchar', {
 		length: 256,
 		nullable: true,
+		name: 'cloudflare_realtime_token',
 	})
-	public cloudflareCallsApiToken: string | null;
+	public cloudflareRealtimeApiToken: string | null;
 }
 
 export type SoftwareSuspension = {

@@ -213,9 +213,9 @@ const menuDef = computed<SuperMenuDef[]>(() => [{
 		active: currentPage.value?.route.name === 'email-settings',
 	}, {
 		icon: 'ti ti-phone',
-		text: 'Cloudflare Calls',
-		to: '/admin/cloudflare-calls',
-		active: currentPage.value?.route.name === 'cloudflare-calls',
+		text: 'Cloudflare Realtime',
+		to: '/admin/cloudflare-realtime',
+		active: currentPage.value?.route.name === 'cloudflare-realtime',
 	}, {
 		icon: 'ti ti-cloud',
 		text: i18n.ts.objectStorage,

@@ -23,9 +23,10 @@ export const paramDef = {
 	type: 'object',
 	properties: {
 		roomId: { type: 'string', format: 'misskey:id' },
-		isMuted: { type: 'boolean' },
+		isMuted: { type: 'boolean', nullable: true },
+		isSpeaking: { type: 'boolean', nullable: true },
 	},
-	required: ['roomId', 'isMuted'],
+	required: ['roomId'],
 } as const;
 
 @Injectable()
@@ -37,20 +38,34 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 		private globalEventService: GlobalEventService,
 	) {
 		super(meta, paramDef, async (ps, me) => {
+			const updateData: {
+				updatedAt: Date;
+				isMuted?: boolean;
+				isSpeaking?: boolean;
+			} = {
+				updatedAt: new Date(),
+			};
+
+			if (ps.isMuted !== null && ps.isMuted !== undefined) {
+				updateData.isMuted = ps.isMuted;
+			}
+
+			if (ps.isSpeaking !== null && ps.isSpeaking !== undefined) {
+				updateData.isSpeaking = ps.isSpeaking;
+			}
+
 			// 参加者の状態を更新
 			await this.voiceChatParticipantsRepository.update({
 				roomId: ps.roomId,
 				userId: me.id,
-			}, {
-				isMuted: ps.isMuted,
-				updatedAt: new Date(),
-			});
+			}, updateData);
 
 			// 状態変更を通知
 			this.globalEventService.publishVoiceChatStream(ps.roomId, 'participantUpdated', {
 				participant: {
 					id: me.id,
-					isMuted: ps.isMuted,
+					isMuted: ps.isMuted ?? false,
+					isSpeaking: ps.isSpeaking ?? false,
 				},
 			});
 		});

@@ -61,7 +61,7 @@ SPDX-License-Identifier: AGPL-3.0-only
 </template>
 
 <script lang="ts" setup>
-import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { ref, onUnmounted } from 'vue';
 import * as Misskey from 'misskey-js';
 import MkButton from '@/components/MkButton.vue';
 import MkAvatar from '@/components/global/MkAvatar.vue';
@@ -84,6 +84,7 @@ interface VoiceChatRoom {
 	hostId: string;
 	participants: VoiceChatParticipant[];
 	cloudflareCallsSessionToken?: string;
+	iceServers?: RTCIceServer[];
 }
 
 const isActive = ref(false);
@@ -92,18 +93,29 @@ const isMuted = ref(false);
 const participants = ref<VoiceChatParticipant[]>([]);
 const roomId = ref<string | null>(null);
 const roomTitle = ref<string>('');
-const cloudflareCallsApp = ref<any>(null);
+const iceServers = ref<RTCIceServer[]>([]);
 
-// Cloudflare Calls関連
+// WebRTC関連
 let localStream: MediaStream | null = null;
 let peerConnections: Map<string, RTCPeerConnection> = new Map();
+let audioContext: AudioContext | null = null;
+let analyser: AnalyserNode | null = null;
 
 const stream = useStream();
 
 async function startVoiceChat() {
 	try {
 		// マイクの権限を取得
-		localStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+		localStream = await navigator.mediaDevices.getUserMedia({
+			audio: {
+				echoCancellation: true,
+				noiseSuppression: true,
+				autoGainControl: true,
+			},
+		});
+
+		// 音声分析の準備
+		setupAudioAnalysis();
 
 		// バックエンドに音声チャットルームの作成を要求
 		const room = await misskeyApi('voice-chat/create', {
@@ -113,9 +125,7 @@ async function startVoiceChat() {
 		roomId.value = room.id;
 		isActive.value = true;
 		isHost.value = true;
-
-		// Cloudflare Callsセッションを初期化
-		await initializeCloudflareCallsSession(room.cloudflareCallsSessionToken);
+		iceServers.value = room.iceServers ?? [{ urls: ['stun:stun.l.google.com:19302'] }];
 
 		// ストリームからの更新を受信
 		stream.useChannel('voiceChat', {}, roomId.value);
@@ -139,18 +149,133 @@ async function startVoiceChat() {
 	}
 }
 
-async function initializeCloudflareCallsSession(sessionToken: string) {
-	try {
-		// Cloudflare Calls SDKの初期化
-		// 注意: 実際にはCloudflare Calls SDKをインポートする必要があります
-		// const { CallsApplication } = await import('@cloudflare/calls');
-		// cloudflareCallsApp.value = new CallsApplication();
-		// await cloudflareCallsApp.value.connect(sessionToken);
+function setupAudioAnalysis() {
+	if (!localStream) return;
 
-		console.log('Cloudflare Calls session initialized:', sessionToken);
+	try {
+		audioContext = new AudioContext();
+		const source = audioContext.createMediaStreamSource(localStream);
+		analyser = audioContext.createAnalyser();
+		analyser.fftSize = 256;
+		source.connect(analyser);
+
+		// 音声レベルの監視を開始
+		monitorAudioLevel();
 	} catch (error) {
-		console.error('Cloudflare Calls初期化エラー:', error);
-		throw error;
+		console.error('音声分析の設定エラー:', error);
+	}
+}
+
+function monitorAudioLevel() {
+	if (!analyser) return;
+
+	const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+	function checkLevel() {
+		if (!analyser || !isActive.value) return;
+
+		analyser.getByteFrequencyData(dataArray);
+		const average = dataArray.reduce((a, b) => a + b) / dataArray.length;
+
+		// 音声レベルに基づいて話中状態を更新
+		const isSpeaking = average > 20 && !isMuted.value;
+		updateSpeakingStatus(isSpeaking);
+
+		requestAnimationFrame(checkLevel);
+	}
+
+	checkLevel();
+}
+
+function updateSpeakingStatus(speaking: boolean) {
+	if (!$i || !roomId.value) return;
+
+	const myParticipant = participants.value.find(p => p.id === $i.id);
+	if (myParticipant && myParticipant.isSpeaking !== speaking) {
+		myParticipant.isSpeaking = speaking;
+
+		// サーバーに状態を送信
+		misskeyApi('voice-chat/update-participant', {
+			roomId: roomId.value,
+			isSpeaking: speaking,
+		}).catch(console.error);
+	}
+}
+
+async function createPeerConnection(participantId: string): Promise<RTCPeerConnection> {
+	const pc = new RTCPeerConnection({
+		iceServers: iceServers.value,
+	});
+
+	// ローカルストリームを追加
+	if (localStream) {
+		localStream.getTracks().forEach(track => {
+			if (localStream) {
+				pc.addTrack(track, localStream);
+			}
+		});
+	}
+
+	// リモートストリームを受信
+	pc.ontrack = (event) => {
+		const [remoteStream] = event.streams;
+		playRemoteAudio(remoteStream, participantId);
+	};
+
+	// ICE候補の処理
+	pc.onicecandidate = (event) => {
+		if (event.candidate && roomId.value) {
+			// ICE候補をサーバー経由で送信
+			misskeyApi('voice-chat/send-ice-candidate', {
+				roomId: roomId.value,
+				targetUserId: participantId,
+				candidate: event.candidate,
+			}).catch(console.error);
+		}
+	};
+
+	pc.onconnectionstatechange = () => {
+		console.log(`Peer connection state with ${participantId}:`, pc.connectionState);
+	};
+
+	peerConnections.set(participantId, pc);
+	return pc;
+}
+
+function playRemoteAudio(remoteStream: MediaStream, participantId: string) {
+	const audio = new Audio();
+	audio.srcObject = remoteStream;
+	audio.play().catch(console.error);
+
+	// 参加者の音声要素として保存
+	const participant = participants.value.find(p => p.id === participantId);
+	if (participant) {
+		// 音声ストリームを関連付け
+		(participant as VoiceChatParticipant & { audioElement?: HTMLAudioElement }).audioElement = audio;
+	}
+}
+
+async function handleNewParticipant(participant: VoiceChatParticipant) {
+	if (participant.id === $i?.id) return;
+
+	const pc = await createPeerConnection(participant.id);
+
+	// オファーを作成して送信
+	if (isHost.value) {
+		try {
+			const offer = await pc.createOffer();
+			await pc.setLocalDescription(offer);
+
+			if (roomId.value) {
+				await misskeyApi('voice-chat/send-offer', {
+					roomId: roomId.value,
+					targetUserId: participant.id,
+					offer: offer,
+				});
+			}
+		} catch (error) {
+			console.error('オファー作成エラー:', error);
+		}
 	}
 }
 
@@ -186,15 +311,16 @@ async function leaveRoom() {
 			localStream = null;
 		}
 
+		// 音声コンテキストを停止
+		if (audioContext) {
+			await audioContext.close();
+			audioContext = null;
+			analyser = null;
+		}
+
 		// Peer Connectionsをクローズ
 		peerConnections.forEach(pc => pc.close());
 		peerConnections.clear();
-
-		// Cloudflare Callsセッションを終了
-		if (cloudflareCallsApp.value) {
-			await cloudflareCallsApp.value.disconnect();
-			cloudflareCallsApp.value = null;
-		}
 
 		// UIを初期状態に戻す
 		isActive.value = false;
@@ -203,6 +329,7 @@ async function leaveRoom() {
 		participants.value = [];
 		roomId.value = null;
 		roomTitle.value = '';
+		iceServers.value = [];
 
 		// ストリームの購読を解除
 		stream.off('voiceChat', onVoiceChatUpdate);
@@ -211,24 +338,104 @@ async function leaveRoom() {
 	}
 }
 
-function onVoiceChatUpdate(data: any) {
+interface VoiceChatUpdateData {
+	type: 'participantJoined' | 'participantLeft' | 'participantUpdated' | 'roomClosed' | 'offer' | 'answer' | 'iceCandidate';
+	participant?: VoiceChatParticipant;
+	participantId?: string;
+	offer?: RTCSessionDescriptionInit;
+	answer?: RTCSessionDescriptionInit;
+	candidate?: RTCIceCandidateInit;
+	fromUserId?: string;
+}
+
+function onVoiceChatUpdate(data: VoiceChatUpdateData) {
 	switch (data.type) {
 		case 'participantJoined':
-			participants.value.push(data.participant);
+			if (data.participant) {
+				participants.value.push(data.participant);
+				handleNewParticipant(data.participant);
+			}
 			break;
 		case 'participantLeft':
-			participants.value = participants.value.filter(p => p.id !== data.participantId);
+			if (data.participantId) {
+				participants.value = participants.value.filter(p => p.id !== data.participantId);
+				// Peer connectionをクローズ
+				const pc = peerConnections.get(data.participantId);
+				if (pc) {
+					pc.close();
+					peerConnections.delete(data.participantId);
+				}
+			}
 			break;
 		case 'participantUpdated': {
-			const index = participants.value.findIndex(p => p.id === data.participant.id);
-			if (index !== -1) {
-				participants.value[index] = data.participant;
+			if (data.participant) {
+				const index = participants.value.findIndex(p => p.id === data.participant?.id);
+				if (index !== -1) {
+					participants.value[index] = data.participant;
+				}
 			}
 			break;
 		}
+		case 'offer':
+			if (data.offer && data.fromUserId) {
+				handleOffer(data.offer, data.fromUserId);
+			}
+			break;
+		case 'answer':
+			if (data.answer && data.fromUserId) {
+				handleAnswer(data.answer, data.fromUserId);
+			}
+			break;
+		case 'iceCandidate':
+			if (data.candidate && data.fromUserId) {
+				handleIceCandidate(data.candidate, data.fromUserId);
+			}
+			break;
 		case 'roomClosed':
 			leaveRoom();
 			break;
+	}
+}
+
+async function handleOffer(offer: RTCSessionDescriptionInit, fromUserId: string) {
+	try {
+		const pc = await createPeerConnection(fromUserId);
+		await pc.setRemoteDescription(offer);
+
+		const answer = await pc.createAnswer();
+		await pc.setLocalDescription(answer);
+
+		if (roomId.value) {
+			await misskeyApi('voice-chat/send-answer', {
+				roomId: roomId.value,
+				targetUserId: fromUserId,
+				answer: answer,
+			});
+		}
+	} catch (error) {
+		console.error('オファー処理エラー:', error);
+	}
+}
+
+async function handleAnswer(answer: RTCSessionDescriptionInit, fromUserId: string) {
+	try {
+		const pc = peerConnections.get(fromUserId);
+		if (pc) {
+			await pc.setRemoteDescription(answer);
+		}
+	} catch (error) {
+		console.error('アンサー処理エラー:', error);
+	}
+}
+
+async function handleIceCandidate(candidate: RTCIceCandidateInit, fromUserId: string) {
+	try {
+		const pc = peerConnections.get(fromUserId);
+		if (pc) {
+			await pc.addIceCandidate(candidate);
+		}
+	} catch (error) {
+		console.error('ICE候補処理エラー:', error);
 	}
 }
 

@@ -24,6 +24,7 @@ import { ChatUserChannelService } from './channels/chat-user.js';
 import { ChatRoomChannelService } from './channels/chat-room.js';
 import { ReversiChannelService } from './channels/reversi.js';
 import { ReversiGameChannelService } from './channels/reversi-game.js';
+import { VoiceChatChannelService } from './channels/voice-chat.js';
 import { type MiChannelService } from './channel.js';
 
 @Injectable()
@@ -67,6 +68,8 @@ export class ChannelsService {
 		private chatRoomChannelService: ChatRoomChannelService,
 		@Inject(forwardRef(() => ChatUserChannelService))
 		private chatUserChannelService: ChatUserChannelService,
+		@Inject(forwardRef(() => VoiceChatChannelService))
+		private voiceChatChannelService: VoiceChatChannelService,
 	) {
 	}
 
@@ -92,6 +95,7 @@ export class ChannelsService {
 			case 'chatRoom': return this.chatRoomChannelService;
 			case 'reversi': return this.reversiChannelService;
 			case 'reversiGame': return this.reversiGameChannelService;
+			case 'voiceChat': return this.voiceChatChannelService;
 
 			default:
 				throw new Error(`no such channel: ${name}`);

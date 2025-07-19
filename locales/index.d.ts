@@ -2363,6 +2363,14 @@ export interface Locale extends ILocale {
      */
     "s3ForcePathStyleDesc": string;
     /**
+     * Cloudflare Realtime
+     */
+    "cloudflareRealtime": string;
+    /**
+     * Cloudflare Realtimeを使用する
+     */
+    "useCloudflareRealtime": string;
+    /**
      * サーバーログ
      */
     "serverLogs": string;

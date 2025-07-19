@@ -183,6 +183,7 @@ export interface VoiceChatEventTypes {
 			title: string | null;
 			hostId: string;
 			createdAt: Date;
+			iceServers?: any[];
 		};
 	};
 	participantJoined: {
@@ -197,13 +198,33 @@ export interface VoiceChatEventTypes {
 		participantId: string;
 	};
 	participantUpdated: {
-		participant: {
+		participant?: {
 			id: string;
 			isMuted: boolean;
+			isSpeaking?: boolean;
 		};
+		type?: string;
+		candidate?: any;
+		fromUserId?: string;
+		targetUserId?: string;
 	};
 	roomClosed: {
 		roomId: string;
+	};
+	offer: {
+		offer: any;
+		fromUserId: string;
+		targetUserId: string;
+	};
+	answer: {
+		answer: any;
+		fromUserId: string;
+		targetUserId: string;
+	};
+	iceCandidate: {
+		candidate: any;
+		fromUserId: string;
+		targetUserId: string;
 	};
 }
 

@@ -13,21 +13,21 @@ export class VoiceChatService {
 	) {}
 
 	/**
-	 * Cloudflare Callsセッションを作成
+	 * Cloudflare Realtime接続情報を取得
 	 */
 	async createSession(roomId: string): Promise<string> {
 		const instance = await this.metaService.fetch();
 		
-		if (!instance.cloudflareCallsAppId || !instance.cloudflareCallsApiToken) {
-			throw new Error('Cloudflare Calls is not configured');
+		if (!instance.cloudflareRealtimeAppId || !instance.cloudflareRealtimeApiToken) {
+			throw new Error('Cloudflare Realtime is not configured');
 		}
 
 		try {
-			// Cloudflare Calls APIを使用してセッションを作成
-			const response = await fetch(`https://rtc.live.cloudflare.com/v1/apps/${instance.cloudflareCallsAppId}/sessions/new`, {
+			// Cloudflare Realtime APIを使用してセッションを作成
+			const response = await fetch(`https://api.cloudflare.realtime/v1/apps/${instance.cloudflareRealtimeAppId}/sessions/new`, {
 				method: 'POST',
 				headers: {
-					'Authorization': `Bearer ${instance.cloudflareCallsApiToken}`,
+					'Authorization': `Bearer ${instance.cloudflareRealtimeApiToken}`,
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
@@ -52,29 +52,29 @@ export class VoiceChatService {
 	}
 
 	/**
-	 * Cloudflare Callsセッションを終了
+	 * Cloudflare Realtimeセッションを終了
 	 */
 	async endSession(sessionToken: string): Promise<void> {
 		const instance = await this.metaService.fetch();
 		
-		if (!instance.cloudflareCallsAppId || !instance.cloudflareCallsApiToken) {
-			throw new Error('Cloudflare Calls is not configured');
+		if (!instance.cloudflareRealtimeAppId || !instance.cloudflareRealtimeApiToken) {
+			throw new Error('Cloudflare Realtime is not configured');
 		}
 
 		try {
-			const response = await fetch(`https://rtc.live.cloudflare.com/v1/apps/${instance.cloudflareCallsAppId}/sessions/${sessionToken}/end`, {
+			const response = await fetch(`https://api.cloudflare.realtime/v1/apps/${instance.cloudflareRealtimeAppId}/sessions/${sessionToken}/end`, {
 				method: 'POST',
 				headers: {
-					'Authorization': `Bearer ${instance.cloudflareCallsApiToken}`,
+					'Authorization': `Bearer ${instance.cloudflareRealtimeApiToken}`,
 					'Content-Type': 'application/json',
 				},
 			});
 
 			if (!response.ok) {
-				console.warn(`Failed to end Cloudflare Calls session: ${response.status} ${response.statusText}`);
+				console.warn(`Failed to end Cloudflare Realtime session: ${response.status} ${response.statusText}`);
 			}
 		} catch (error) {
-			console.error('Error ending Cloudflare Calls session:', error);
+			console.error('Error ending Cloudflare Realtime session:', error);
 		}
 	}
 }

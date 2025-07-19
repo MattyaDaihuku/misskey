@@ -15,7 +15,7 @@ import { SystemWebhookService } from '@/core/SystemWebhookService.js';
 import { UserSearchService } from '@/core/UserSearchService.js';
 import { WebhookTestService } from '@/core/WebhookTestService.js';
 import { FlashService } from '@/core/FlashService.js';
-import { CloudflareCallsService } from '@/core/CloudflareCallsService.js';
+import { CloudflareRealtimeService } from '@/core/CloudflareRealtimeService.js';
 import { AccountMoveService } from './AccountMoveService.js';
 import { AccountUpdateService } from './AccountUpdateService.js';
 import { AiService } from './AiService.js';
@@ -169,7 +169,7 @@ const $AppLockService: Provider = { provide: 'AppLockService', useExisting: AppL
 const $AchievementService: Provider = { provide: 'AchievementService', useExisting: AchievementService };
 const $AvatarDecorationService: Provider = { provide: 'AvatarDecorationService', useExisting: AvatarDecorationService };
 const $CaptchaService: Provider = { provide: 'CaptchaService', useExisting: CaptchaService };
-const $CloudflareCallsService: Provider = { provide: 'CloudflareCallsService', useExisting: CloudflareCallsService };
+const $CloudflareRealtimeService: Provider = { provide: 'CloudflareRealtimeService', useExisting: CloudflareRealtimeService };
 const $CustomEmojiService: Provider = { provide: 'CustomEmojiService', useExisting: CustomEmojiService };
 const $DeleteAccountService: Provider = { provide: 'DeleteAccountService', useExisting: DeleteAccountService };
 const $DownloadService: Provider = { provide: 'DownloadService', useExisting: DownloadService };
@@ -321,7 +321,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		AchievementService,
 		AvatarDecorationService,
 		CaptchaService,
-		CloudflareCallsService,
+		CloudflareRealtimeService,
 		CustomEmojiService,
 		DeleteAccountService,
 		DownloadService,
@@ -470,7 +470,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		$AchievementService,
 		$AvatarDecorationService,
 		$CaptchaService,
-		$CloudflareCallsService,
+		$CloudflareRealtimeService,
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$DownloadService,
@@ -619,7 +619,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		AchievementService,
 		AvatarDecorationService,
 		CaptchaService,
-		CloudflareCallsService,
+		CloudflareRealtimeService,
 		CustomEmojiService,
 		DeleteAccountService,
 		DownloadService,
@@ -766,7 +766,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		$AchievementService,
 		$AvatarDecorationService,
 		$CaptchaService,
-		$CloudflareCallsService,
+		$CloudflareRealtimeService,
 		$CustomEmojiService,
 		$DeleteAccountService,
 		$DownloadService,
