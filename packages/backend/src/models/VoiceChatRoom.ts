@@ -4,7 +4,7 @@
  */
 
 import { PrimaryColumn, Entity, Index, JoinColumn, Column, ManyToOne } from 'typeorm';
-import { id } from '../id.js';
+import { id } from './util/id.js';
 import { MiUser } from './User.js';
 
 @Entity('voice_chat_room')

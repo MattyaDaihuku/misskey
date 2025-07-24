@@ -4,18 +4,18 @@
  */
 
 import { Inject, Injectable } from '@nestjs/common';
-import type { MetaRepository } from '@/models/_.js';
+import type { MetasRepository } from '@/models/_.js';
 import { DI } from '@/di-symbols.js';
 import { LoggerService } from '@/core/LoggerService.js';
-import type { Logger } from '@/logger.js';
+import Logger from '@/logger.js';
 
 @Injectable()
 export class CloudflareRealtimeService {
 	private logger: Logger;
 
 	constructor(
-		@Inject(DI.metaRepository)
-		private metaRepository: MetaRepository,
+		@Inject(DI.metasRepository)
+		private metasRepository: MetasRepository,
 
 		private loggerService: LoggerService,
 	) {
@@ -23,7 +23,7 @@ export class CloudflareRealtimeService {
 	}
 
 	private async getConfig() {
-		const meta = await this.metaRepository.findOneBy({ id: '1' });
+		const meta = await this.metasRepository.findOneBy({ id: '1' });
 		if (!meta) {
 			throw new Error('Meta not found');
 		}
@@ -81,9 +81,9 @@ export class CloudflareRealtimeService {
 			return {
 				roomId,
 				webRTCConfig: {
-					iceServers: data.iceServers || [
+					iceServers: data.iceServers ?? [
 						{ urls: ['stun:stun.cloudflare.com:3478'] },
-						{ urls: ['turn:turn.cloudflare.com:3478'], username: 'cloudflare', credential: data.turnCredential || '' },
+						{ urls: ['turn:turn.cloudflare.com:3478'], username: 'cloudflare', credential: data.turnCredential ?? '' },
 					],
 					roomUrl: data.roomUrl,
 					signalingUrl: data.signalingUrl,
@@ -161,7 +161,7 @@ export class CloudflareRealtimeService {
 			}
 
 			const data = await response.json();
-			return data.token || 'dummy-token';
+			return data.token ?? 'dummy-token';
 		} catch (error) {
 			this.logger.error('Failed to generate participant token', { error, roomId, userId });
 			return `dummy-token-${roomId}-${userId}-${Date.now()}`;
@@ -187,7 +187,7 @@ export class CloudflareRealtimeService {
 			}
 
 			const data = await response.json();
-			return data.participants || [];
+			return data.participants ?? [];
 		} catch (error) {
 			this.logger.error('Failed to get room participants', { error, roomId });
 			return [];
@@ -211,7 +211,7 @@ export class CloudflareRealtimeService {
 			if (!response.ok) {
 				this.logger.warn(`Failed to remove participant: ${response.status} ${response.statusText}`, { roomId, userId });
 			} else {
-				this.logger.info(`Removed participant from Cloudflare Realtime room`, { roomId, userId });
+				this.logger.info('Removed participant from Cloudflare Realtime room', { roomId, userId });
 			}
 		} catch (error) {
 			this.logger.error('Failed to remove participant', { error, roomId, userId });
@@ -238,9 +238,9 @@ export class CloudflareRealtimeService {
 
 			const data = await response.json();
 			return {
-				participantCount: data.participantCount || 0,
-				activeStreams: data.activeStreams || 0,
-				bandwidth: data.bandwidth || 0,
+				participantCount: data.participantCount ?? 0,
+				activeStreams: data.activeStreams ?? 0,
+				bandwidth: data.bandwidth ?? 0,
 			};
 		} catch (error) {
 			this.logger.error('Failed to get room stats', { error, roomId });

@@ -235,6 +235,7 @@ export {
 	MiChatApproval,
 	MiBubbleGameRecord,
 	MiReversiGame,
+	MiVoiceChatRoom,
 };
 
 export type AbuseUserReportsRepository = Repository<MiAbuseUserReport> & MiRepository<MiAbuseUserReport>;

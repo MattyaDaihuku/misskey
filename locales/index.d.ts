@@ -299,6 +299,10 @@ export interface Locale extends ILocale {
      */
     "copyProfileUrl": string;
     /**
+     * 設定済み
+     */
+    "configured": string;
+    /**
      * ユーザーを検索
      */
     "searchUser": string;
@@ -13073,6 +13077,104 @@ export interface Locale extends ILocale {
              */
             "tearing": string;
         };
+    };
+    "_cloudflareRealtime": {
+        /**
+         * Cloudflare Realtime
+         */
+        "title": string;
+        /**
+         * Cloudflare Realtimeは、Cloudflareのサーバーレス WebRTC SFU サービスです。音声・動画通話機能を提供するために使用されます。
+         */
+        "description": string;
+        /**
+         * Cloudflare Realtime App ID
+         */
+        "appId": string;
+        /**
+         * CloudflareダッシュボードのRealtimeセクションから取得できるアプリケーションID
+         */
+        "appIdDescription": string;
+        /**
+         * Cloudflare Realtime API Token
+         */
+        "apiToken": string;
+        /**
+         * Cloudflare APIトークン（Realtime権限が必要）
+         */
+        "apiTokenDescription": string;
+        /**
+         * 接続テスト
+         */
+        "connectionTest": string;
+        /**
+         * 設定が正しく構成されているかテストできます。
+         */
+        "connectionTestDescription": string;
+        /**
+         * 使用方法
+         */
+        "usage": string;
+        /**
+         * セットアップ手順
+         */
+        "setupSteps": string;
+        /**
+         * Cloudflareダッシュボードにログインします
+         */
+        "step1": string;
+        /**
+         * 「Real-Time Communication」セクションに移動します
+         */
+        "step2": string;
+        /**
+         * 新しいアプリケーションを作成し、App IDを取得します
+         */
+        "step3": string;
+        /**
+         * APIトークンを作成し、Realtime権限を付与します
+         */
+        "step4": string;
+        /**
+         * 上記のフィールドにApp IDとAPIトークンを入力して保存します
+         */
+        "step5": string;
+        /**
+         * 制限事項
+         */
+        "limitations": string;
+        /**
+         * Cloudflare Realtimeは使用量に応じて課金されます
+         */
+        "limitation1": string;
+        /**
+         * 同時接続数には制限があります
+         */
+        "limitation2": string;
+        /**
+         * 設定を変更した場合は、サーバーの再起動が推奨されます
+         */
+        "limitation3": string;
+        /**
+         * 設定が保存されていません。App IDとAPIトークンを設定してください。
+         */
+        "configNotSaved": string;
+        /**
+         * Cloudflare Realtimeへの接続テストが成功しました。
+         */
+        "connectionTestSuccess": string;
+        /**
+         * 接続テストに失敗しました。設定を確認してください。
+         */
+        "connectionTestFailed": string;
+        /**
+         * 設定の読み込みに失敗しました
+         */
+        "loadConfigError": string;
+        /**
+         * 設定の保存に失敗しました
+         */
+        "saveConfigError": string;
     };
 }
 declare const locales: {
