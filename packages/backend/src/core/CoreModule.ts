@@ -15,6 +15,7 @@ import { SystemWebhookService } from '@/core/SystemWebhookService.js';
 import { UserSearchService } from '@/core/UserSearchService.js';
 import { WebhookTestService } from '@/core/WebhookTestService.js';
 import { FlashService } from '@/core/FlashService.js';
+import { CloudflareRealtimeService } from '@/core/CloudflareRealtimeService.js';
 import { AccountMoveService } from './AccountMoveService.js';
 import { AccountUpdateService } from './AccountUpdateService.js';
 import { AiService } from './AiService.js';
@@ -318,6 +319,7 @@ const $ApGameService: Provider = { provide: 'ApGameService', useExisting: ApGame
 		AchievementService,
 		AvatarDecorationService,
 		CaptchaService,
+		CloudflareRealtimeService,
 		CustomEmojiService,
 		DeleteAccountService,
 		DownloadService,

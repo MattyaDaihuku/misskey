@@ -497,6 +497,10 @@ export const ROUTE_DEF = [{
 		name: 'email-settings',
 		component: page(() => import('@/pages/admin/email-settings.vue')),
 	}, {
+		path: '/cloudflare-realtime',
+		name: 'cloudflare-realtime',
+		component: page(() => import('@/pages/admin/cloudflare-realtime.vue')),
+	}, {
 		path: '/object-storage',
 		name: 'object-storage',
 		component: page(() => import('@/pages/admin/object-storage.vue')),

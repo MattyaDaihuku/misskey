@@ -716,6 +716,18 @@ export class MiMeta {
 		default: true,
 	})
 	public allowExternalApRedirect: boolean;
+
+	@Column('varchar', {
+		length: 1024,
+		nullable: true,
+	})
+	public cloudflareRealtimeAppId: string | null;
+
+	@Column('varchar', {
+		length: 1024,
+		nullable: true,
+	})
+	public cloudflareRealtimeApiToken: string | null;
 }
 
 export type SoftwareSuspension = {

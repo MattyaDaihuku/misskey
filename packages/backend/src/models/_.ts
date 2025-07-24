@@ -90,6 +90,7 @@ import { MiUserPending } from '@/models/UserPending.js';
 import { MiUserProfile } from '@/models/UserProfile.js';
 import { MiUserPublickey } from '@/models/UserPublickey.js';
 import { MiUserSecurityKey } from '@/models/UserSecurityKey.js';
+import { MiVoiceChatRoom } from '@/models/VoiceChatRoom.js';
 import { MiWebhook } from '@/models/Webhook.js';
 import { MiNoteSchedule } from '@/models/NoteSchedule.js';
 import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
@@ -312,4 +313,5 @@ export type ChatRoomInvitationsRepository = Repository<MiChatRoomInvitation> & M
 export type ChatApprovalsRepository = Repository<MiChatApproval> & MiRepository<MiChatApproval>;
 export type BubbleGameRecordsRepository = Repository<MiBubbleGameRecord> & MiRepository<MiBubbleGameRecord>;
 export type ReversiGamesRepository = Repository<MiReversiGame> & MiRepository<MiReversiGame>;
+export type VoiceChatRoomsRepository = Repository<MiVoiceChatRoom> & MiRepository<MiVoiceChatRoom>;
 export type NoteScheduleRepository = Repository<MiNoteSchedule>;

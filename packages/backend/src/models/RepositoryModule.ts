@@ -18,6 +18,7 @@ import {
 	MiAvatarDecoration,
 	MiBlocking,
 	MiBubbleGameRecord,
+	MiVoiceChatRoom,
 	MiChannel,
 	MiChannelFavorite,
 	MiChannelFollowing,
@@ -522,6 +523,12 @@ const $chatApprovalsRepository: Provider = {
 const $bubbleGameRecordsRepository: Provider = {
 	provide: DI.bubbleGameRecordsRepository,
 	useFactory: (db: DataSource) => db.getRepository(MiBubbleGameRecord).extend(miRepository as MiRepository<MiBubbleGameRecord>),
+	inject: [DI.db],
+};
+
+const $voiceChatRoomsRepository: Provider = {
+	provide: DI.voiceChatRoomsRepository,
+	useFactory: (db: DataSource) => db.getRepository(MiVoiceChatRoom).extend(miRepository as MiRepository<MiVoiceChatRoom>),
 	inject: [DI.db],
 };
 
