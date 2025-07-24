@@ -106,11 +106,11 @@ import MkInput from '@/components/MkInput.vue';
 import MkInfo from '@/components/MkInfo.vue';
 import MkFolder from '@/components/MkFolder.vue';
 import FormSuspense from '@/components/form/suspense.vue';
-import PageWithHeader from '@/ui/PageWithHeader.vue';
+import PageWithHeader from '@/components/global/PageWithHeader.vue';
 import * as os from '@/os.js';
 import { misskeyApi } from '@/utility/misskey-api.js';
 import { i18n } from '@/i18n.js';
-import { definePage } from '@/scripts/page.js';
+import { definePage } from '@/page.js';
 import MkButton from '@/components/MkButton.vue';
 
 const cloudflareRealtimeAppId = ref<string>('');
