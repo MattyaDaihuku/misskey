@@ -3819,6 +3819,14 @@ export interface Locale extends ILocale {
      */
     "makeReactionsPublicDescription": string;
     /**
+     * リアクションを公開する
+     */
+    "publicReactions": string;
+    /**
+     * ロック済み
+     */
+    "isLocked": string;
+    /**
      * クラシック
      */
     "classic": string;
@@ -5443,7 +5451,7 @@ export interface Locale extends ILocale {
      */
     "prohibitedWordsForNameOfUser": string;
     /**
-     * このリストに含まれる文字列がユーザーの名前に含まれる場合、ユーザーの名前の変更を拒否します。モデレーター権限を持つユーザーはこの制限の影響を受けません。
+     * このリストに含まれる文字列がユーザーの名前に含まれる場合、ユーザーの名前の変更を拒否します。モデレーター権限を持つユーザーはこの制限の影響を受けません。ユーザー名(username)に対しても全て小文字に置き換えて検査します。
      */
     "prohibitedWordsForNameOfUserDescription": string;
     /**
@@ -5482,6 +5490,10 @@ export interface Locale extends ILocale {
      * このサーバーは連合が無効化されています。他のサーバーのユーザーとやり取りすることはできません。
      */
     "federationDisabled": string;
+    /**
+     * 下書き
+     */
+    "draft": string;
     /**
      * リアクションする際に確認する
      */
@@ -5833,6 +5845,16 @@ export interface Locale extends ILocale {
      * 低くすると画質を保てますが、ファイルサイズは増加します。<br>高くするとファイルサイズを減らせますが、画質は低下します。
      */
     "defaultImageCompressionLevel_description": string;
+    "_order": {
+        /**
+         * 新しい順
+         */
+        "newest": string;
+        /**
+         * 古い順
+         */
+        "oldest": string;
+    };
     "_chat": {
         /**
          * まだメッセージはありません
@@ -8267,6 +8289,14 @@ export interface Locale extends ILocale {
              * ファイルによっては種別を判定できないことがあります。そのようなファイルを許可する場合は {x} を指定に追加してください。
              */
             "uploadableFileTypes_caption2": ParameterizedString<"x">;
+            /**
+             * サーバーサイドのノートの下書きの作成可能数
+             */
+            "noteDraftLimit": string;
+            /**
+             * ウォーターマーク機能の使用可否
+             */
+            "watermarkAvailable": string;
         };
         "_condition": {
             /**
@@ -8900,6 +8930,10 @@ export interface Locale extends ILocale {
          * テーマコード
          */
         "code": string;
+        /**
+         * テーマコードをコピー
+         */
+        "copyThemeCode": string;
         /**
          * 説明
          */
@@ -11561,6 +11595,10 @@ export interface Locale extends ILocale {
          */
         "attachedNotes": string;
         /**
+         * 利用
+         */
+        "usage": string;
+        /**
          * このページは、このファイルをアップロードしたユーザーしか閲覧できません。
          */
         "thisPageCanBeSeenFromTheAuthor": string;
@@ -12465,24 +12503,14 @@ export interface Locale extends ILocale {
          * 警告: やみノートは信頼済みインスタンスにのみ配信されますが、リモートインスタンスの実装状況によっては適切に処理されない可能性があります。信頼できるインスタンスのみを追加してください。
          */
         "yamiNoteFederationWarning": string;
-        "_yamiModeSwitcher": {
-            /**
-             * やみモードに切り替えますか？やみモードにすると、他人のやみノートを閲覧できるようになります
-             */
-            "enterYamiModeConfirm": string;
-            /**
-             * 通常モードに戻りますか？通常モードにすると、他人のやみノートを閲覧できなくなります
-             */
-            "exitYamiModeConfirm": string;
-            /**
-             * 通常モード
-             */
-            "normal": string;
-            /**
-             * やみモード
-             */
-            "yami": string;
-        };
+        /**
+         * やみモードに切り替え
+         */
+        "switchToYamiMode": string;
+        /**
+         * 通常モードに切り替え
+         */
+        "switchToNormalMode": string;
     };
     "_remoteLookupErrors": {
         "_federationNotAllowed": {
@@ -12818,6 +12846,10 @@ export interface Locale extends ILocale {
     };
     "_uploader": {
         /**
+         * 画像の編集
+         */
+        "editImage": string;
+        /**
          * {x}に圧縮
          */
         "compressedToX": ParameterizedString<"x">;
@@ -13077,6 +13109,64 @@ export interface Locale extends ILocale {
              */
             "tearing": string;
         };
+    };
+    /**
+     * 下書き
+     */
+    "drafts": string;
+    "_drafts": {
+        /**
+         * 下書きを選択
+         */
+        "select": string;
+        /**
+         * 下書きの作成可能数を超えています。
+         */
+        "cannotCreateDraftAnymore": string;
+        /**
+         * この内容では下書きを作成できません。
+         */
+        "cannotCreateDraft": string;
+        /**
+         * 下書きを削除
+         */
+        "delete": string;
+        /**
+         * 下書きを削除しますか？
+         */
+        "deleteAreYouSure": string;
+        /**
+         * 下書きはありません
+         */
+        "noDrafts": string;
+        /**
+         * {user}への返信
+         */
+        "replyTo": ParameterizedString<"user">;
+        /**
+         * {user}のノートへの引用
+         */
+        "quoteOf": ParameterizedString<"user">;
+        /**
+         * {channel}への投稿
+         */
+        "postTo": ParameterizedString<"channel">;
+        /**
+         * 下書きへ保存
+         */
+        "saveToDraft": string;
+        /**
+         * 下書きから復元
+         */
+        "restoreFromDraft": string;
+        /**
+         * 復元
+         */
+        "restore": string;
+        /**
+         * 下書き一覧
+         */
+        "listDrafts": string;
     };
     "_cloudflareRealtime": {
         /**

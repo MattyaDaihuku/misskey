@@ -91,5 +91,6 @@ export const DI = {
 	reversiGamesRepository: Symbol('reversiGamesRepository'),
 	voiceChatRoomsRepository: Symbol('voiceChatRoomsRepository'),
 	noteScheduleRepository: Symbol('noteScheduleRepository'),
+	noteDraftsRepository: Symbol('noteDraftsRepository'),
 	//#endregion
 };
