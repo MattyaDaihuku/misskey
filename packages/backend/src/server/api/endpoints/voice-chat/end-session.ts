@@ -95,23 +95,10 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 				throw new ApiError(meta.errors.notHost);
 			}
 
-			// End session via Cloudflare Realtime API
-			const response = await fetch(`https://rtc.live.cloudflare.com/v1/apps/${this.serverSettings.cloudflareRealtimeAppId}/sessions/${ps.sessionId}`, {
-				method: 'DELETE',
-				headers: {
-					'Authorization': `Bearer ${this.serverSettings.cloudflareRealtimeAppSecret}`,
-					'Content-Type': 'application/json',
-				},
-			});
-
-			if (!response.ok) {
-				if (response.status === 404) {
-					throw new ApiError(meta.errors.sessionNotFound);
-				}
-				throw new Error(`Failed to end session: ${response.statusText}`);
-			}
-
-			// Update room status after successful session end
+			// Note: Cloudflare Realtime API sessions auto-expire when all participants leave
+			// The DELETE method returns 405 (Method Not Allowed), so we only clean up internal state
+			
+			// Update room status after session end
 			targetRoom.status = 'waiting';
 			targetRoom.sessionId = undefined;
 			// Clear participants and speakers lists as they will need to rejoin
