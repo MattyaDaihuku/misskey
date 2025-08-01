@@ -450,6 +450,7 @@ export * as 'admin/approve-user' from './endpoints/admin/approve-user.js';
 export * as 'admin/reject-user' from './endpoints/admin/reject-user.js';
 export * as 'voice-chat/create-room' from './endpoints/voice-chat/create-room.js';
 export * as 'voice-chat/create-session' from './endpoints/voice-chat/create-session.js';
+export * as 'voice-chat/end-session' from './endpoints/voice-chat/end-session.js';
 export * as 'voice-chat/get-active-rooms' from './endpoints/voice-chat/get-active-rooms.js';
 export * as 'voice-chat/get-room' from './endpoints/voice-chat/get-room.js';
 export * as 'voice-chat/invite-user' from './endpoints/voice-chat/invite-user.js';
