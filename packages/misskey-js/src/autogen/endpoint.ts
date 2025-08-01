@@ -666,6 +666,15 @@ import type {
 	UsersUpdateMemoRequest,
 	V2AdminEmojiListRequest,
 	V2AdminEmojiListResponse,
+	VoiceChatCreateRoomRequest,
+	VoiceChatCreateSessionRequest,
+	VoiceChatEndSessionRequest,
+	VoiceChatGetRoomRequest,
+	VoiceChatInviteUserRequest,
+	VoiceChatJoinSessionRequest,
+	VoiceChatManageTracksRequest,
+	VoiceChatRenegotiateRequest,
+	VoiceChatStartSessionRequest,
 } from './entities.js';
 
 export type Endpoints = {
@@ -1107,6 +1116,16 @@ export type Endpoints = {
 	'users/show': { req: UsersShowRequest; res: UsersShowResponse };
 	'users/update-memo': { req: UsersUpdateMemoRequest; res: EmptyResponse };
 	'v2/admin/emoji/list': { req: V2AdminEmojiListRequest; res: V2AdminEmojiListResponse };
+	'voice-chat/create-room': { req: VoiceChatCreateRoomRequest; res: EmptyResponse };
+	'voice-chat/create-session': { req: VoiceChatCreateSessionRequest; res: EmptyResponse };
+	'voice-chat/end-session': { req: VoiceChatEndSessionRequest; res: EmptyResponse };
+	'voice-chat/get-active-rooms': { req: EmptyRequest; res: EmptyResponse };
+	'voice-chat/get-room': { req: VoiceChatGetRoomRequest; res: EmptyResponse };
+	'voice-chat/invite-user': { req: VoiceChatInviteUserRequest; res: EmptyResponse };
+	'voice-chat/join-session': { req: VoiceChatJoinSessionRequest; res: EmptyResponse };
+	'voice-chat/manage-tracks': { req: VoiceChatManageTracksRequest; res: EmptyResponse };
+	'voice-chat/renegotiate': { req: VoiceChatRenegotiateRequest; res: EmptyResponse };
+	'voice-chat/start-session': { req: VoiceChatStartSessionRequest; res: EmptyResponse };
 };
 
 /**
