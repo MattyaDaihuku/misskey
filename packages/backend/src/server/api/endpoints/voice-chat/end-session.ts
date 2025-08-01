@@ -97,7 +97,7 @@ export default class extends Endpoint<typeof meta, typeof paramDef> { // eslint-
 
 			// Note: Cloudflare Realtime API sessions auto-expire when all participants leave
 			// The DELETE method returns 405 (Method Not Allowed), so we only clean up internal state
-			
+
 			// Update room status after session end
 			targetRoom.status = 'waiting';
 			targetRoom.sessionId = undefined;
